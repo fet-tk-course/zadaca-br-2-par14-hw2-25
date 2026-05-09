@@ -3,11 +3,13 @@
 
 ## O projektu
 
-[Ovdje ukratko opišite domenu vaše aplikacije i njenu svrhu]
+Aplikacija predstavlja backend sistem za upravljanje kino repertoarom.
+Omogućava evidenciju filmova i žanrova, a planirana je evidencija sala, 
+projekcija, korisnika i rezervacija.
 
 ## Tim
 
-- **Student A**: [Ime Prezime] - resurs: `/resursi_a`
+- **Student A**: Nejla Kavazović - resurs: /genres, /movies
 - **Student B**: [Ime Prezime] - resurs: `/resursi_b`
 
 ## Instalacija i pokretanje
@@ -50,22 +52,30 @@ uvicorn main:app --reload
 
 ### Resurs A: `/resursi_a`
 
-| Metoda | Ruta | Opis |
-|--------|------|------|
-| GET | `/resursi_a` | Lista svih resursa (sa query filterom) |
-| GET | `/resursi_a/{id}` | Dohvatanje resursa po ID-u |
-| POST | `/resursi_a` | Kreiranje novog resursa |
-| PUT | `/resursi_a/{id}` | Potpuna zamjena resursa |
-| PATCH | `/resursi_a/{id}` | Djelimično ažuriranje resursa |
-| DELETE | `/resursi_a/{id}` | Brisanje resursa |
+### Žanrovi `/genres`
+Metoda | Ruta | Opis
+GET | /genres | Lista svih žanrova (filter: ?is_active=true/false)
+GET | /genres/{id} | Dohvatanje žanra po ID-u
+POST | /genres | Kreiranje novog žanra (status 201)
+PUT | /genres/{id} | Potpuna zamjena žanra
+PATCH | /genres/{id} | Djelimično ažuriranje žanra
+DELETE | /genres/{id} | Brisanje žanra (status 204)
+
+### Filmovi `/movies`
+Metoda | Ruta | Opis
+GET | /movies | Lista svih filmova (filter: ?is_currently_showing=true/false)
+GET | /movies/{id} | Dohvatanje filma po ID-u
+POST | /movies | Kreiranje novog filma (status 201)
+PUT | /movies/{id} | Potpuna zamjena filma
+PATCH | /movies/{id} | Djelimično ažuriranje filma
+DELETE | /movies/{id} | Brisanje filma (status 204)
 
 **Primjer zahtjeva:**
-```bash
-# Kreiranje novog resursa
-curl -X POST "http://localhost:8000/resursi_a" \
+
+# Kreiranje novog žanra
+curl -X POST "http://localhost:8000/genres" \
   -H "Content-Type: application/json" \
-  -d '{"polje1": "vrijednost", "polje2": 123}'
-```
+  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "movie_count": 0, "is_active": true}'
 
 ### Resurs B: `/resursi_b`
 
@@ -73,19 +83,22 @@ curl -X POST "http://localhost:8000/resursi_a" \
 
 ## Korištenje AI alata
 
-### Alat: [GitHub Copilot / ChatGPT / ...]
-**Model:** [GPT-4, Copilot model, ...]
+Alat: Claude (Anthropic)
+Model: Claude Sonnet 4.6
 
-**Primjer 1:**
-- **Prompt:** [Npr. "Kreiraj SQLModel klasu za entitet Knjiga sa poljima naslov, autor, godina, isbn"]
-- **Kako je pomoglo:** [Opis]
-- **Prilagodbe:** [Da li ste morali prilagoditi generisani kod]
+Primjer 1:
+Prompt: "Napravi SQLModel entitet za Film sa najmanje 5 polja različitih tipova, 
+uključujući string, int, float, bool i Optional polja"
+Kako je pomoglo: Generisana je kompletna struktura klase sa svim potrebnim poljima
+Prilagodbe: Uklonjen tmdb_id, dodan director i trailer_url, ispravljeni encoding problemi
 
-**Primjer 2:**
-- **Prompt:** [Npr. "Implementiraj PATCH endpoint sa exclude_unset=True"]
-- **Kako je pomoglo:** [Opis]
-- **Prilagodbe:** [Opis]
+Primjer 2:
+Prompt: "Implementiraj kompletne FastAPI CRUD rute za Genre i Movie entitet 
+koristeći dependency injection sa Depends i SQLModel Session"
+Kako je pomoglo: Generisane su sve rute uključujući exclude_unset=True za PATCH
+Prilagodbe: Prilagođene poruke grešaka, usklađeni nazivi funkcija
 
 ## Napomene
 
-[Dodatne napomene specifične za vašu implementaciju]
+Aplikacija je testirana na Python 3.12.10 bez virtualnog okruženja.
+Za pokretanje koristiti: py -3.12 -m uvicorn main:app --reload
