@@ -202,6 +202,105 @@ def test_put_seat_missing_hall_id_returns_422(client: TestClient, session: Sessi
 	assert response.status_code == 422
 
 
+def test_patch_seat_updates_only_type_id(client: TestClient, session: Session):
+	seat_type_vip = _create_seat_type(session, "VIP")
+	seat_type_standard = _create_seat_type(session, "Standard")
+	hall_type = _create_hall_type(session)
+	hall = _create_hall(session, hall_type.id)
+	seat = _create_seat(session, seat_type_vip.id, hall.id)
+
+	response = client.patch(
+		f"/seats/{seat.id}",
+		json={"type_id": seat_type_standard.id}
+	)
+	assert response.status_code == 200
+	assert response.json()["type_id"] == seat_type_standard.id
+	assert response.json()["hall_id"] == hall.id
+
+
+def test_patch_seat_updates_only_hall_id(client: TestClient, session: Session):
+	seat_type = _create_seat_type(session)
+	hall_type = _create_hall_type(session)
+	hall_one = _create_hall(session, hall_type.id)
+	hall_two = _create_hall(session, hall_type.id)
+	seat = _create_seat(session, seat_type.id, hall_one.id)
+
+	response = client.patch(
+		f"/seats/{seat.id}",
+		json={"hall_id": hall_two.id}
+	)
+	assert response.status_code == 200
+	assert response.json()["type_id"] == seat_type.id
+	assert response.json()["hall_id"] == hall_two.id
+
+
+def test_patch_seat_updates_both_fields(client: TestClient, session: Session):
+	seat_type_vip = _create_seat_type(session, "VIP")
+	seat_type_standard = _create_seat_type(session, "Standard")
+	hall_type = _create_hall_type(session)
+	hall_one = _create_hall(session, hall_type.id)
+	hall_two = _create_hall(session, hall_type.id)
+	seat = _create_seat(session, seat_type_vip.id, hall_one.id)
+
+	response = client.patch(
+		f"/seats/{seat.id}",
+		json={"type_id": seat_type_standard.id, "hall_id": hall_two.id}
+	)
+	assert response.status_code == 200
+	assert response.json()["type_id"] == seat_type_standard.id
+	assert response.json()["hall_id"] == hall_two.id
+
+
+def test_patch_seat_with_empty_body_is_noop(client: TestClient, session: Session):
+	seat_type = _create_seat_type(session)
+	hall_type = _create_hall_type(session)
+	hall = _create_hall(session, hall_type.id)
+	seat = _create_seat(session, seat_type.id, hall.id)
+
+	response = client.patch(f"/seats/{seat.id}", json={})
+	assert response.status_code == 200
+	assert response.json()["type_id"] == seat_type.id
+	assert response.json()["hall_id"] == hall.id
+
+
+def test_patch_seat_not_found_returns_404(client: TestClient, session: Session):
+	seat_type = _create_seat_type(session)
+	hall_type = _create_hall_type(session)
+	hall = _create_hall(session, hall_type.id)
+
+	response = client.patch(
+		"/seats/9999",
+		json={"type_id": seat_type.id, "hall_id": hall.id}
+	)
+	assert response.status_code == 404
+
+
+def test_patch_seat_with_invalid_type_id_returns_404(client: TestClient, session: Session):
+	seat_type = _create_seat_type(session)
+	hall_type = _create_hall_type(session)
+	hall = _create_hall(session, hall_type.id)
+	seat = _create_seat(session, seat_type.id, hall.id)
+
+	response = client.patch(
+		f"/seats/{seat.id}",
+		json={"type_id": 9999}
+	)
+	assert response.status_code == 404
+
+
+def test_patch_seat_with_invalid_hall_id_returns_404(client: TestClient, session: Session):
+	seat_type = _create_seat_type(session)
+	hall_type = _create_hall_type(session)
+	hall = _create_hall(session, hall_type.id)
+	seat = _create_seat(session, seat_type.id, hall.id)
+
+	response = client.patch(
+		f"/seats/{seat.id}",
+		json={"hall_id": 9999}
+	)
+	assert response.status_code == 404
+
+
 def test_delete_seat_not_found_returns_404(client: TestClient):
 	response = client.delete("/seats/9999")
 	assert response.status_code == 404

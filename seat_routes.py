@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 from typing import Optional
 from database import get_session
-from models_b import Hall, Seat, SeatCreate, SeatType
+from models_b import Hall, Seat, SeatCreate, SeatType, SeatUpdate
 
 router = APIRouter(prefix="/seats", tags=["Seats"])
 
@@ -68,6 +69,33 @@ def put_seat(seat_id: int, seat_in: SeatCreate, session: Session = Depends(get_s
 
 	data = seat_in.model_dump()
 	for key, value in data.items():
+		setattr(db_seat, key, value)
+
+	session.add(db_seat)
+	session.commit()
+	session.refresh(db_seat)
+	return db_seat
+
+
+@router.patch("/{seat_id}", response_model=Seat)
+def patch_seat(seat_id: int, seat_in: SeatUpdate, session: Session = Depends(get_session)):
+	db_seat = session.get(Seat, seat_id)
+	if not db_seat:
+		raise HTTPException(status_code=404, detail="Seat not found")
+
+	update_data = seat_in.model_dump(exclude_unset=True)
+
+	if "type_id" in update_data:
+		seat_type = session.get(SeatType, update_data["type_id"])
+		if not seat_type:
+			raise HTTPException(status_code=404, detail="SeatType not found")
+
+	if "hall_id" in update_data:
+		hall = session.get(Hall, update_data["hall_id"])
+		if not hall:
+			raise HTTPException(status_code=404, detail="Hall not found")
+
+	for key, value in update_data.items():
 		setattr(db_seat, key, value)
 
 	session.add(db_seat)

@@ -59,3 +59,8 @@ class SeatCreate(SQLModel):
 	type_id: int
 	hall_id: int
 
+
+class SeatUpdate(SQLModel):
+	type_id: Optional[int] = None
+	hall_id: Optional[int] = None
+
