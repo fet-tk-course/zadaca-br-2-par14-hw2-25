@@ -16,12 +16,12 @@ class SeatTypeCreate(SQLModel):
 
 class HallType(SQLModel, table=True):
 	id: Optional[int] = Field(default=None, primary_key=True)
-	typeName: str
+	type_name: str
 
 
 class HallTypeCreate(SQLModel):
-	typeName: str
+	type_name: str
 
 
 class HallTypeUpdate(SQLModel):
-	typeName: Optional[str] = None
+	type_name: Optional[str] = None

@@ -13,7 +13,7 @@ def get_hall_types(
 ):
 	query = select(HallType)
 	if name is not None:
-		query = query.where(HallType.typeName == name)
+		query = query.where(HallType.type_name == name)
 	hall_types = session.exec(query).all()
 	return hall_types
 
