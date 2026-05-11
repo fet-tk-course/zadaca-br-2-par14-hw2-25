@@ -25,8 +25,11 @@ def client_fixture(session: Session):
         return session
     app.dependency_overrides[get_session] = get_session_override
     client = TestClient(app)
-    yield client
-    app.dependency_overrides.clear()
+    try:
+        yield client
+    finally:
+        client.close()
+        app.dependency_overrides.clear()
 
 
 def test_create_genre(client: TestClient):
