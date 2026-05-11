@@ -88,7 +88,7 @@ POST | /seat-types | Kreiranje novog tipa sjedala (status 201)
 PUT | /seat-types/{id} | Potpuna zamjena tipa sjedala
 DELETE | /seat-types/{id} | Brisanje tipa sjedala (status 204)
 
-### Tipov dvorana `/hall-types`
+### Tipovi dvorana `/hall-types`
 Metoda | Ruta | Opis
 GET | /hall-types | Lista svih tipova dvorana (filter: ?name=hall_type_name)
 GET | /hall-types/{id} | Dohvatanje tipa dvorana po ID-u

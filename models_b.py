@@ -22,6 +22,3 @@ class HallType(SQLModel, table=True):
 class HallTypeCreate(SQLModel):
 	type_name: str
 
-
-class HallTypeUpdate(SQLModel):
-	type_name: Optional[str] = None

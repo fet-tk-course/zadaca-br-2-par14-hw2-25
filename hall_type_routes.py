@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 from typing import Optional
 from database import get_session
-from models_b import HallType, HallTypeCreate, HallTypeUpdate
+from models_b import HallType, HallTypeCreate
 
 router = APIRouter(prefix="/hall-types", tags=["Hall Types"])
 
