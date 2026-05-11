@@ -80,9 +80,9 @@ curl -X POST "http://localhost:8000/genres" \
 
 ### Resurs B:
 
-### Tipov sjedala `/seat-types`
+### Tipovi sjedala `/seat-types`
 Metoda | Ruta | Opis
-GET | /seat-types | Lista svih tipova sjedal (filter: ?name=seat_type_name)
+GET | /seat-types | Lista svih tipova sjedala (filter: ?name=seat_type_name)
 GET | /seat-types/{id} | Dohvatanje tipa sjedala po ID-u
 POST | /seat-types | Kreiranje novog tipa sjedala (status 201)
 PUT | /seat-types/{id} | Potpuna zamjena tipa sjedala
