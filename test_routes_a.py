@@ -43,6 +43,7 @@ def test_create_genre(client: TestClient):
     })
     assert response.status_code == 201
     assert response.json()["name"] == "Action"
+    assert response.json()["movie_count"] == 0
 
 
 def test_get_genres(client: TestClient):
@@ -83,3 +84,34 @@ def test_get_movie_not_found(client: TestClient):
     # Test 404 kada film ne postoji
     response = client.get("/movies/9999")
     assert response.status_code == 404
+
+
+def test_movie_count_updates_on_movie_create_and_delete(client: TestClient):
+    genre = client.post("/genres", json={
+        "name": "Drama",
+        "description": "Drama filmovi",
+        "popularity_score": 8.0,
+        "is_active": True
+    }).json()
+
+    create_movie_response = client.post("/movies", json={
+        "title": "Test Movie",
+        "director": "Test Director",
+        "duration_minutes": 120,
+        "release_year": 2020,
+        "rating": 7.5,
+        "trailer_url": None,
+        "is_currently_showing": True,
+        "genre_id": genre["id"]
+    })
+    assert create_movie_response.status_code == 201
+    movie_id = create_movie_response.json()["id"]
+
+    genre_after_create = client.get(f"/genres/{genre['id']}").json()
+    assert genre_after_create["movie_count"] == 1
+
+    delete_movie_response = client.delete(f"/movies/{movie_id}")
+    assert delete_movie_response.status_code == 204
+
+    genre_after_delete = client.get(f"/genres/{genre['id']}").json()
+    assert genre_after_delete["movie_count"] == 0
