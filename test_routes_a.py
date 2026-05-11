@@ -114,3 +114,39 @@ def test_movie_count_updates_on_movie_create_and_delete(client: TestClient):
 
     genre_after_delete = client.get(f"/genres/{genre['id']}").json()
     assert genre_after_delete["movie_count"] == 0
+
+
+def test_movie_count_updates_when_movie_changes_genre(client: TestClient):
+    old_genre = client.post("/genres", json={
+        "name": "Old Genre",
+        "description": "Old",
+        "popularity_score": 7.0,
+        "is_active": True
+    }).json()
+    new_genre = client.post("/genres", json={
+        "name": "New Genre",
+        "description": "New",
+        "popularity_score": 9.0,
+        "is_active": True
+    }).json()
+
+    create_movie_response = client.post("/movies", json={
+        "title": "Reassign Movie",
+        "director": "Test Director",
+        "duration_minutes": 100,
+        "release_year": 2021,
+        "rating": 8.0,
+        "is_currently_showing": True,
+        "genre_id": old_genre["id"]
+    })
+    movie_id = create_movie_response.json()["id"]
+
+    patch_movie_response = client.patch(f"/movies/{movie_id}", json={
+        "genre_id": new_genre["id"]
+    })
+    assert patch_movie_response.status_code == 200
+
+    old_genre_after_patch = client.get(f"/genres/{old_genre['id']}").json()
+    new_genre_after_patch = client.get(f"/genres/{new_genre['id']}").json()
+    assert old_genre_after_patch["movie_count"] == 0
+    assert new_genre_after_patch["movie_count"] == 1
