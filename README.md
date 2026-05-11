@@ -86,7 +86,6 @@ GET | /seat-types | Lista svih tipova sjedal (filter: ?name=seat_type_name)
 GET | /seat-types/{id} | Dohvatanje tipa sjedala po ID-u
 POST | /seat-types | Kreiranje novog tipa sjedala (status 201)
 PUT | /seat-types/{id} | Potpuna zamjena tipa sjedala
-PATCH | /seat-types/{id} | Djelimično ažuriranje tipa sjedala
 DELETE | /seat-types/{id} | Brisanje tipa sjedala (status 204)
 
 **Primjer zahtjeva:**

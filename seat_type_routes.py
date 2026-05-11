@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlmodel import Session, select
 from typing import Optional
-
 from database import get_session
 from models_b import SeatType, SeatTypeCreate, SeatTypeUpdate
 
@@ -53,20 +52,12 @@ def put_seat_type(seat_type_id: int, seat_type_in: SeatTypeCreate, session: Sess
 	session.refresh(db_seat_type)
 	return db_seat_type
 
-
-@router.patch("/{seat_type_id}", response_model=SeatType)
-def patch_seat_type(seat_type_id: int, seat_type_in: SeatTypeUpdate, session: Session = Depends(get_session)):
-	"""Partial update of SeatType: only provided fields are updated."""
+@router.delete("/{seat_type_id}", status_code=204)
+def delete_seat_type(seat_type_id: int, session: Session = Depends(get_session)):
 	db_seat_type = session.get(SeatType, seat_type_id)
 	if not db_seat_type:
 		raise HTTPException(status_code=404, detail="SeatType not found")
 
-	update_data = seat_type_in.model_dump(exclude_unset=True)
-	for key, value in update_data.items():
-		setattr(db_seat_type, key, value)
-
-	session.add(db_seat_type)
+	session.delete(db_seat_type)
 	session.commit()
-	session.refresh(db_seat_type)
-	return db_seat_type
 
