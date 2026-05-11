@@ -53,22 +53,24 @@ uvicorn main:app --reload
 ### Endpointi za žanrove i filmove
 
 ### Žanrovi `/genres`
-Metoda | Ruta | Opis
-GET | /genres | Lista svih žanrova (filter: ?is_active=true/false)
-GET | /genres/{id} | Dohvatanje žanra po ID-u
-POST | /genres | Kreiranje novog žanra (status 201)
-PUT | /genres/{id} | Potpuna zamjena žanra
-PATCH | /genres/{id} | Djelimično ažuriranje žanra
-DELETE | /genres/{id} | Brisanje žanra (status 204)
+| Metoda | Ruta | Opis |
+| --- | --- | --- |
+| GET | /genres | Lista svih žanrova (filter: ?is_active=true/false) |
+| GET | /genres/{id} | Dohvatanje žanra po ID-u |
+| POST | /genres | Kreiranje novog žanra (status 201) |
+| PUT | /genres/{id} | Potpuna zamjena žanra |
+| PATCH | /genres/{id} | Djelimično ažuriranje žanra |
+| DELETE | /genres/{id} | Brisanje žanra (status 204) |
 
 ### Filmovi `/movies`
-Metoda | Ruta | Opis
-GET | /movies | Lista svih filmova (filter: ?is_currently_showing=true/false)
-GET | /movies/{id} | Dohvatanje filma po ID-u
-POST | /movies | Kreiranje novog filma (status 201)
-PUT | /movies/{id} | Potpuna zamjena filma
-PATCH | /movies/{id} | Djelimično ažuriranje filma
-DELETE | /movies/{id} | Brisanje filma (status 204)
+| Metoda | Ruta | Opis |
+| --- | --- | --- |
+| GET | /movies | Lista svih filmova (filter: ?is_currently_showing=true/false) |
+| GET | /movies/{id} | Dohvatanje filma po ID-u |
+| POST | /movies | Kreiranje novog filma (status 201) |
+| PUT | /movies/{id} | Potpuna zamjena filma |
+| PATCH | /movies/{id} | Djelimično ažuriranje filma |
+| DELETE | /movies/{id} | Brisanje filma (status 204) |
 
 **Primjer zahtjeva:**
 
