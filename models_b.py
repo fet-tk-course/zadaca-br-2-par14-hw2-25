@@ -11,7 +11,7 @@ class SeatType(SQLModel, table=True):
 
 
 class SeatTypeCreate(SQLModel):
-	typeName: str
+	type_name: str
 
 
 class HallType(SQLModel, table=True):
@@ -21,3 +21,7 @@ class HallType(SQLModel, table=True):
 
 class HallTypeCreate(SQLModel):
 	typeName: str
+
+
+class HallTypeUpdate(SQLModel):
+	typeName: Optional[str] = None
