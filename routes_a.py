@@ -142,7 +142,7 @@ def update_movie(movie_id: int, movie: MovieCreate, session: Session = Depends(g
     for key, value in movie_data.items():
         setattr(db_movie, key, value)
     session.add(db_movie)
-    if old_genre_id != new_genre_id:
+    if "genre_id" in movie_data and old_genre_id != new_genre_id:
         session.flush()
         sync_genre_movie_count(session, old_genre_id)
         sync_genre_movie_count(session, new_genre_id)
