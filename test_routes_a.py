@@ -100,7 +100,6 @@ def test_movie_count_updates_on_movie_create_and_delete(client: TestClient):
         "duration_minutes": 120,
         "release_year": 2020,
         "rating": 7.5,
-        "trailer_url": None,
         "is_currently_showing": True,
         "genre_id": genre["id"]
     })
