@@ -51,7 +51,7 @@ uvicorn main:app --reload
 
 ## API Endpointi
 
-### Resurs A: `/resursi_a`
+### Endpointi za žanrove i filmove
 
 ### Žanrovi `/genres`
 | Metoda | Ruta | Opis |
