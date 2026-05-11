@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from sqlmodel import Session, select
 
-from database import create_db_and_tables, engine
+from database import create_db_and_tables, engine, get_session
 from routes_a import router as router_a
 from routes_b import router as router_b
 from models_a import Genre, Movie
@@ -53,8 +53,9 @@ def seed_data():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Kreiranje tabela i punjenje početnim podacima
-    create_db_and_tables()
-    seed_data()
+    if get_session not in app.dependency_overrides:
+        create_db_and_tables()
+        seed_data()
     yield
 
 

@@ -51,11 +51,7 @@ uvicorn main:app --reload
 
 ## API Endpointi
 
-<<<<<<< HEAD
 ### Resurs A:
-=======
-### Endpointi za žanrove i filmove
->>>>>>> 30b764e (Potential fix for pull request finding)
 
 ### Žanrovi `/genres`
 Metoda | Ruta | Opis
