@@ -141,7 +141,7 @@ def update_movie(movie_id: int, movie: MovieCreate, session: Session = Depends(g
     for key, value in movie_data.items():
         setattr(db_movie, key, value)
     session.add(db_movie)
-    if "genre_id" in movie_data and old_genre_id != db_movie.genre_id:
+    if old_genre_id != db_movie.genre_id:
         session.flush()
         sync_genre_movie_count(session, old_genre_id)
         sync_genre_movie_count(session, db_movie.genre_id)
@@ -161,7 +161,7 @@ def patch_movie(movie_id: int, movie: MovieUpdate, session: Session = Depends(ge
     for key, value in movie_data.items():
         setattr(db_movie, key, value)
     session.add(db_movie)
-    if "genre_id" in movie_data and old_genre_id != db_movie.genre_id:
+    if old_genre_id != db_movie.genre_id:
         session.flush()
         sync_genre_movie_count(session, old_genre_id)
         sync_genre_movie_count(session, db_movie.genre_id)
