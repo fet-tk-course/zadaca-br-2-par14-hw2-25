@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 from typing import Optional
 
 from database import get_session
@@ -15,10 +15,10 @@ def sync_genre_movie_count(session: Session, genre_id: Optional[int]):
     genre = session.get(Genre, genre_id)
     if not genre:
         return
-    movies_in_genre = session.exec(
-        select(Movie.id).where(Movie.genre_id == genre_id)
-    ).all()
-    genre.movie_count = len(movies_in_genre)
+    movie_count = session.exec(
+        select(func.count(Movie.id)).where(Movie.genre_id == genre_id)
+    ).one()
+    genre.movie_count = movie_count
     session.add(genre)
 
 
@@ -138,12 +138,13 @@ def update_movie(movie_id: int, movie: MovieCreate, session: Session = Depends(g
         raise HTTPException(status_code=404, detail="Film nije pronađen")
     old_genre_id = db_movie.genre_id
     movie_data = movie.model_dump()
+    new_genre_id = movie_data.get("genre_id")
     for key, value in movie_data.items():
         setattr(db_movie, key, value)
-    if old_genre_id != db_movie.genre_id:
+    if old_genre_id != new_genre_id:
         session.flush()
         sync_genre_movie_count(session, old_genre_id)
-        sync_genre_movie_count(session, db_movie.genre_id)
+        sync_genre_movie_count(session, new_genre_id)
     session.add(db_movie)
     session.commit()
     session.refresh(db_movie)
