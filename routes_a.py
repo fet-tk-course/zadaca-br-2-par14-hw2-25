@@ -9,6 +9,16 @@ from models_a import Genre, GenreCreate, GenreUpdate, Movie, MovieCreate, MovieU
 router = APIRouter()
 
 
+def update_genre_movie_count(session: Session, genre_id: Optional[int], delta: int):
+    if genre_id is None:
+        return
+    genre = session.get(Genre, genre_id)
+    if not genre:
+        return
+    genre.movie_count = max(0, genre.movie_count + delta)
+    session.add(genre)
+
+
 @router.get("/genres", response_model=list[Genre])
 def get_genres(
     is_active: Optional[bool] = Query(default=None, description="Filter po aktivnosti žanra"),
@@ -110,6 +120,7 @@ def create_movie(movie: MovieCreate, session: Session = Depends(get_session)):
     # Kreiranje novog filma
     db_movie = Movie.model_validate(movie)
     session.add(db_movie)
+    update_genre_movie_count(session, db_movie.genre_id, 1)
     session.commit()
     session.refresh(db_movie)
     return db_movie
@@ -121,9 +132,13 @@ def update_movie(movie_id: int, movie: MovieCreate, session: Session = Depends(g
     db_movie = session.get(Movie, movie_id)
     if not db_movie:
         raise HTTPException(status_code=404, detail="Film nije pronađen")
+    old_genre_id = db_movie.genre_id
     movie_data = movie.model_dump()
     for key, value in movie_data.items():
         setattr(db_movie, key, value)
+    if old_genre_id != db_movie.genre_id:
+        update_genre_movie_count(session, old_genre_id, -1)
+        update_genre_movie_count(session, db_movie.genre_id, 1)
     session.add(db_movie)
     session.commit()
     session.refresh(db_movie)
@@ -136,9 +151,13 @@ def patch_movie(movie_id: int, movie: MovieUpdate, session: Session = Depends(ge
     db_movie = session.get(Movie, movie_id)
     if not db_movie:
         raise HTTPException(status_code=404, detail="Film nije pronađen")
+    old_genre_id = db_movie.genre_id
     movie_data = movie.model_dump(exclude_unset=True)
     for key, value in movie_data.items():
         setattr(db_movie, key, value)
+    if old_genre_id != db_movie.genre_id:
+        update_genre_movie_count(session, old_genre_id, -1)
+        update_genre_movie_count(session, db_movie.genre_id, 1)
     session.add(db_movie)
     session.commit()
     session.refresh(db_movie)
@@ -151,5 +170,6 @@ def delete_movie(movie_id: int, session: Session = Depends(get_session)):
     db_movie = session.get(Movie, movie_id)
     if not db_movie:
         raise HTTPException(status_code=404, detail="Film nije pronađen")
+    update_genre_movie_count(session, db_movie.genre_id, -1)
     session.delete(db_movie)
     session.commit()

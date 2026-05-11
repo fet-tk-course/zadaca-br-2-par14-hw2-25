@@ -17,7 +17,6 @@ class GenreCreate(SQLModel):
     name: str
     description: Optional[str] = None
     popularity_score: float = 0.0
-    movie_count: int = 0
     is_active: bool = True
 
 
@@ -25,7 +24,6 @@ class GenreUpdate(SQLModel):
     name: Optional[str] = None
     description: Optional[str] = None
     popularity_score: Optional[float] = None
-    movie_count: Optional[int] = None
     is_active: Optional[bool] = None
 
 
