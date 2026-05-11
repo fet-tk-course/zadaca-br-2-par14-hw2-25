@@ -7,12 +7,8 @@ from typing import Optional
 
 class SeatType(SQLModel, table=True):
 	id: Optional[int] = Field(default=None, primary_key=True)
-	typeName: str
+	type_name: str
 
 
 class SeatTypeCreate(SQLModel):
-	typeName: str
-
-
-class SeatTypeUpdate(SQLModel):
-	typeName: Optional[str] = None
+	type_name: str

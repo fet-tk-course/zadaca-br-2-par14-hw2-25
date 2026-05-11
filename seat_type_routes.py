@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlmodel import Session, select
 from typing import Optional
 from database import get_session
-from models_b import SeatType, SeatTypeCreate, SeatTypeUpdate
+from models_b import SeatType, SeatTypeCreate
 
 
 router = APIRouter(prefix="/seat-types", tags=["Seat Types"])
@@ -15,7 +15,7 @@ def get_seat_types(
 ):
 	query = select(SeatType)
 	if name is not None:
-		query = query.where(SeatType.typeName == name)
+		query = query.where(SeatType.type_name == name)
 	seat_types = session.exec(query).all()
 	return seat_types
 
