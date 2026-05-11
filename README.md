@@ -74,10 +74,12 @@ uvicorn main:app --reload
 
 **Primjer zahtjeva:**
 
-# Kreiranje novog žanra
+#### Kreiranje novog žanra
+```bash
 curl -X POST "http://localhost:8000/genres" \
   -H "Content-Type: application/json" \
-  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "movie_count": 0, "is_active": true}'
+  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "is_active": true}'
+```
 
 ### Resurs B: `/resursi_b`
 
