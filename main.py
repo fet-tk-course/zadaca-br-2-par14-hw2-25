@@ -4,6 +4,7 @@ from sqlmodel import Session, select
 
 from database import create_db_and_tables, engine
 from routes_a import router as router_a
+from routes_b import router as router_b
 from models_a import Genre, Movie
 
 
@@ -70,3 +71,4 @@ def read_root():
 
 
 app.include_router(router_a)
+app.include_router(router_b)
