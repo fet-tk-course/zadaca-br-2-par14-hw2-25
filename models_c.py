@@ -10,3 +10,17 @@ class User(SQLModel, table=True):
     age:int
     phone_number:str
     is_active:bool=True
+
+class UserCreate(SQLModel):
+    first_name:str
+    last_name:str
+    email:str
+    age:int
+    phone_number:str
+
+class UserUpdate(SQLModel):
+    first_name:Optional[str]=None
+    last_name:Optional[str]=None
+    email:Optional[str]=None
+    age:Optional[int]=None
+    phone_number:Optional[str]=None
