@@ -53,6 +53,7 @@ def seed_data():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Kreiranje tabela i punjenje početnim podacima
+    # FastAPI dependency_overrides koristi originalni callable kao ključ (npr. get_session u testovima)
     if get_session not in app.dependency_overrides:
         create_db_and_tables()
         seed_data()

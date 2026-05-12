@@ -51,7 +51,7 @@ uvicorn main:app --reload
 
 ## API Endpointi
 
-### Resurs A: `/resursi_a`
+### Endpointi za žanrove i filmove
 
 ### Žanrovi `/genres`
 | Metoda | Ruta | Opis |
@@ -79,7 +79,8 @@ uvicorn main:app --reload
 ```bash
 curl -X POST "http://localhost:8000/genres" \
   -H "Content-Type: application/json" \
-  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "movie_count": 0, "is_active": true}'
+  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "is_active": true}'
+```
 
 ### Resurs B:
 
