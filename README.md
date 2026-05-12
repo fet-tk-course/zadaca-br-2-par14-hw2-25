@@ -102,6 +102,7 @@ GET | /seats | Lista svih sjedala (filteri: `?hall_id=broj`, `?type_id=broj`, `?
 GET | /seats/{id} | Dohvatanje sjedala po ID-u
 POST | /seats | Kreiranje novog sjedala (status 201)
 PUT | /seats/{id} | Potpuna zamjena sjedala
+PATCH | /seats/{id} | Djelimično ažuriranje sjedala
 DELETE | /seats/{id} | Brisanje sjedala (status 204)
 
 **Napomena:** U GET ruti za sjedala nije dozvoljeno istovremeno slati `type_id` i `type_name`.
