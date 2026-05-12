@@ -86,6 +86,7 @@ curl -X POST "http://localhost:8000/genres" \
 
 ### Tipovi sjedala `/seat-types`
 Metoda | Ruta | Opis
+| --- | --- | --- |
 GET | /seat-types | Lista svih tipova sjedala (filter: ?name=seat_type_name)
 GET | /seat-types/{id} | Dohvatanje tipa sjedala po ID-u
 POST | /seat-types | Kreiranje novog tipa sjedala (status 201)
@@ -94,6 +95,7 @@ DELETE | /seat-types/{id} | Brisanje tipa sjedala (status 204)
 
 ### Tipovi dvorana `/hall-types`
 Metoda | Ruta | Opis
+| --- | --- | --- |
 GET | /hall-types | Lista svih tipova dvorana (filter: ?name=hall_type_name)
 GET | /hall-types/{id} | Dohvatanje tipa dvorana po ID-u
 POST | /hall-types | Kreiranje novog tipa dvorana (status 201)
@@ -102,6 +104,7 @@ DELETE | /hall-types/{id} | Brisanje tipa dvorana (status 204)
 
 ### Sjedala `/seats`
 Metoda | Ruta | Opis
+| --- | --- | --- |
 GET | /seats | Lista svih sjedala (filteri: `?hall_id=broj`, `?type_id=broj`, `?type_name=string`)
 GET | /seats/{id} | Dohvatanje sjedala po ID-u
 POST | /seats | Kreiranje novog sjedala (status 201)
@@ -110,6 +113,17 @@ PATCH | /seats/{id} | Djelimično ažuriranje sjedala
 DELETE | /seats/{id} | Brisanje sjedala (status 204)
 
 **Napomena:** U GET ruti za sjedala nije dozvoljeno istovremeno slati `type_id` i `type_name`.
+
+### Projekcije `/screenings`
+Metoda | Ruta | Opis
+| --- | --- | --- |
+GET | /screenings | Lista svih projekcija (filteri: `?hall_id=broj`, `?movie_id=broj`)
+GET | /screenings/{id} | Dohvatanje projekcije po ID-u
+GET | /screenings/{id}/with-details | Dohvatanje projekcije po ID-u sa podacima o sali i filmu
+POST | /screenings | Kreiranje nove projekcije (status 201, provjera konflikta termina u istoj sali)
+PUT | /screenings/{id} | Potpuna zamjena projekcije (provjera konflikta termina u istoj sali)
+PATCH | /screenings/{id} | Djelimično ažuriranje projekcije (provjera konflikta termina u istoj sali)
+DELETE | /screenings/{id} | Brisanje projekcije (status 204)
 
 **Primjer zahtjeva:**
 

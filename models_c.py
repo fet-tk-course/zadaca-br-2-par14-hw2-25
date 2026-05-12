@@ -28,7 +28,7 @@ class UserUpdate(SQLModel):
 class Reservation(SQLModel, table=True):
     id:Optional[int]=Field(default=None, primary_key=True)
     user_id:int
-    screening_id:int
+    screening_id:int = Field(foreign_key="screenings.id")
     seat_id:int
     price:float
     confirmed:bool=False
