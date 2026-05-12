@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 from typing import Optional
 from database import get_session
@@ -36,8 +36,8 @@ def _screening_overlaps(
 
 @router.get("", response_model=list[Screening])
 def get_screenings(
-	hall_id: Optional[int] = None,
-	movie_id: Optional[int] = None,
+	hall_id: Optional[int] = Query(default=None, description="Filter by hall id"),
+	movie_id: Optional[int] = Query(default=None, description="Filter by movie id"),
 	session: Session = Depends(get_session)
 ):
 	statement = select(Screening)
@@ -50,8 +50,8 @@ def get_screenings(
 
 @router.get("/with-details", response_model=list[ScreeningRead])
 def get_screenings_with_details(
-	hall_id: Optional[int] = None,
-	movie_id: Optional[int] = None,
+	hall_id: Optional[int] = Query(default=None, description="Filter by hall id"),
+	movie_id: Optional[int] = Query(default=None, description="Filter by movie id"),
 	session: Session = Depends(get_session)
 ):
 	statement = select(Screening, Hall, HallType, Movie).join(Hall, Screening.hall_id == Hall.id).join(HallType, Hall.type_id == HallType.id).join(Movie, Screening.movie_id == Movie.id)
