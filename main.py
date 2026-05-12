@@ -6,6 +6,7 @@ from database import create_db_and_tables, engine, get_session
 from routes_a import router as router_a
 from routes_b import router as router_b
 from routes_c import router as router_c
+from routes_users import router as router_users
 from models_a import Genre, Movie
 
 
@@ -73,6 +74,7 @@ app.include_router(router_c, prefix="/student_c", tags=["Modul Korisnici i Rezer
 def read_root():
     return {"message": "Zadaća 2 - REST API"}
 
+app.include_router(router_users)
 
 app.include_router(router_a)
 app.include_router(router_b)
