@@ -54,29 +54,33 @@ uvicorn main:app --reload
 ### Resurs A:
 
 ### Žanrovi `/genres`
-Metoda | Ruta | Opis
-GET | /genres | Lista svih žanrova (filter: ?is_active=true/false)
-GET | /genres/{id} | Dohvatanje žanra po ID-u
-POST | /genres | Kreiranje novog žanra (status 201)
-PUT | /genres/{id} | Potpuna zamjena žanra
-PATCH | /genres/{id} | Djelimično ažuriranje žanra
-DELETE | /genres/{id} | Brisanje žanra (status 204)
+| Metoda | Ruta | Opis |
+| --- | --- | --- |
+| GET | /genres | Lista svih žanrova (filter: ?is_active=true/false) |
+| GET | /genres/{id} | Dohvatanje žanra po ID-u |
+| POST | /genres | Kreiranje novog žanra (status 201) |
+| PUT | /genres/{id} | Potpuna zamjena žanra |
+| PATCH | /genres/{id} | Djelimično ažuriranje žanra |
+| DELETE | /genres/{id} | Brisanje žanra (status 204) |
 
 ### Filmovi `/movies`
-Metoda | Ruta | Opis
-GET | /movies | Lista svih filmova (filter: ?is_currently_showing=true/false)
-GET | /movies/{id} | Dohvatanje filma po ID-u
-POST | /movies | Kreiranje novog filma (status 201)
-PUT | /movies/{id} | Potpuna zamjena filma
-PATCH | /movies/{id} | Djelimično ažuriranje filma
-DELETE | /movies/{id} | Brisanje filma (status 204)
+| Metoda | Ruta | Opis |
+| --- | --- | --- |
+| GET | /movies | Lista svih filmova (filter: ?is_currently_showing=true/false) |
+| GET | /movies/{id} | Dohvatanje filma po ID-u |
+| POST | /movies | Kreiranje novog filma (status 201) |
+| PUT | /movies/{id} | Potpuna zamjena filma |
+| PATCH | /movies/{id} | Djelimično ažuriranje filma |
+| DELETE | /movies/{id} | Brisanje filma (status 204) |
 
 **Primjer zahtjeva:**
 
-# Kreiranje novog žanra
+#### Kreiranje novog žanra
+```bash
 curl -X POST "http://localhost:8000/genres" \
   -H "Content-Type: application/json" \
-  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "movie_count": 0, "is_active": true}'
+  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "is_active": true}'
+```
 
 ### Resurs B:
 

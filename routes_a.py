@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 from typing import Optional
 
 from database import get_session
@@ -7,6 +7,19 @@ from models_a import Genre, GenreCreate, GenreUpdate, Movie, MovieCreate, MovieU
 
 
 router = APIRouter()
+
+
+def sync_genre_movie_count(session: Session, genre_id: Optional[int]):
+    if genre_id is None:
+        return
+    genre = session.get(Genre, genre_id)
+    if not genre:
+        return
+    movie_count = session.exec(
+        select(func.count(Movie.id)).where(Movie.genre_id == genre_id)
+    ).one()
+    genre.movie_count = movie_count
+    session.add(genre)
 
 
 @router.get("/genres", response_model=list[Genre])
@@ -110,6 +123,8 @@ def create_movie(movie: MovieCreate, session: Session = Depends(get_session)):
     # Kreiranje novog filma
     db_movie = Movie.model_validate(movie)
     session.add(db_movie)
+    session.flush()
+    sync_genre_movie_count(session, db_movie.genre_id)
     session.commit()
     session.refresh(db_movie)
     return db_movie
@@ -121,10 +136,15 @@ def update_movie(movie_id: int, movie: MovieCreate, session: Session = Depends(g
     db_movie = session.get(Movie, movie_id)
     if not db_movie:
         raise HTTPException(status_code=404, detail="Film nije pronađen")
+    old_genre_id = db_movie.genre_id
     movie_data = movie.model_dump()
     for key, value in movie_data.items():
         setattr(db_movie, key, value)
     session.add(db_movie)
+    if old_genre_id != db_movie.genre_id:
+        session.flush()
+        sync_genre_movie_count(session, old_genre_id)
+        sync_genre_movie_count(session, db_movie.genre_id)
     session.commit()
     session.refresh(db_movie)
     return db_movie
@@ -136,10 +156,15 @@ def patch_movie(movie_id: int, movie: MovieUpdate, session: Session = Depends(ge
     db_movie = session.get(Movie, movie_id)
     if not db_movie:
         raise HTTPException(status_code=404, detail="Film nije pronađen")
+    old_genre_id = db_movie.genre_id
     movie_data = movie.model_dump(exclude_unset=True)
     for key, value in movie_data.items():
         setattr(db_movie, key, value)
     session.add(db_movie)
+    if old_genre_id != db_movie.genre_id:
+        session.flush()
+        sync_genre_movie_count(session, old_genre_id)
+        sync_genre_movie_count(session, db_movie.genre_id)
     session.commit()
     session.refresh(db_movie)
     return db_movie
@@ -151,5 +176,8 @@ def delete_movie(movie_id: int, session: Session = Depends(get_session)):
     db_movie = session.get(Movie, movie_id)
     if not db_movie:
         raise HTTPException(status_code=404, detail="Film nije pronađen")
+    genre_id = db_movie.genre_id
     session.delete(db_movie)
+    session.flush()
+    sync_genre_movie_count(session, genre_id)
     session.commit()
