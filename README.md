@@ -79,17 +79,17 @@ uvicorn main:app --reload
 ```bash
 curl -X POST "http://localhost:8000/genres" \
   -H "Content-Type: application/json" \
-  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "is_active": true}'
-```
+  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "movie_count": 0, "is_active": true}'
 
 ### Resurs B:
 
-### Tipovi sjedala `/seat-types`
+### Tipov sjedala `/seat-types`
 Metoda | Ruta | Opis
-GET | /seat-types | Lista svih tipova sjedala (filter: ?name=seat_type_name)
+GET | /seat-types | Lista svih tipova sjedal (filter: ?name=seat_type_name)
 GET | /seat-types/{id} | Dohvatanje tipa sjedala po ID-u
 POST | /seat-types | Kreiranje novog tipa sjedala (status 201)
 PUT | /seat-types/{id} | Potpuna zamjena tipa sjedala
+PATCH | /seat-types/{id} | Djelimično ažuriranje tipa sjedala
 DELETE | /seat-types/{id} | Brisanje tipa sjedala (status 204)
 
 **Primjer zahtjeva:**
