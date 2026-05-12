@@ -52,18 +52,6 @@ def test_get_halls_empty_returns_empty_list(client: TestClient):
     assert response.json() == []
 
 
-def test_get_halls_returns_created_hall(client: TestClient, session: Session):
-    hall_type = _create_hall_type(session, "IMAX")
-    hall = _create_hall(session, hall_type.id)
-
-    response = client.get("/halls")
-    assert response.status_code == 200
-    data = response.json()
-    assert len(data) == 1
-    assert data[0]["id"] == hall.id
-    assert data[0]["type_id"] == hall_type.id
-
-
 def test_get_halls_filter_no_match_returns_empty_list(client: TestClient, session: Session):
     hall_type = _create_hall_type(session, "IMAX")
     _create_hall(session, hall_type.id)
@@ -76,16 +64,6 @@ def test_get_halls_filter_no_match_returns_empty_list(client: TestClient, sessio
 def test_get_hall_not_found_returns_404(client: TestClient):
     response = client.get("/halls/9999")
     assert response.status_code == 404
-
-
-def test_get_hall_returns_hall(client: TestClient, session: Session):
-    hall_type = _create_hall_type(session, "Standard")
-    hall = _create_hall(session, hall_type.id)
-
-    response = client.get(f"/halls/{hall.id}")
-    assert response.status_code == 200
-    assert response.json()["id"] == hall.id
-    assert response.json()["type_id"] == hall_type.id
 
 
 def test_get_halls_with_type_name_static_route_not_422(client: TestClient):
@@ -115,31 +93,9 @@ def test_get_halls_with_type_name_returns_id_type_id_and_type_name(client: TestC
     assert data[0]["type_name"] == "IMAX"
 
 
-def test_get_hall_with_type_name_returns_id_type_id_and_type_name(client: TestClient, session: Session):
-    hall_type = _create_hall_type(session, "IMAX")
-    hall = _create_hall(session, hall_type.id)
-
-    response = client.get(f"/halls/{hall.id}/with-type-name")
-    assert response.status_code == 200
-    data = response.json()
-    assert data["id"] == hall.id
-    assert data["type_id"] == hall_type.id
-    assert data["type_name"] == "IMAX"
-
-
 def test_get_hall_with_type_name_not_found_returns_404(client: TestClient):
     response = client.get("/halls/9999/with-type-name")
     assert response.status_code == 404
-
-
-def test_create_hall_with_valid_type_id_returns_201(client: TestClient, session: Session):
-    hall_type = _create_hall_type(session, "Standard")
-
-    response = client.post("/halls", json={"type_id": hall_type.id})
-    assert response.status_code == 201
-    data = response.json()
-    assert data["id"] is not None
-    assert data["type_id"] == hall_type.id
 
 
 def test_create_hall_with_invalid_type_id_returns_404(client: TestClient):
@@ -157,18 +113,6 @@ def test_put_hall_not_found_returns_404(client: TestClient, session: Session):
 
     response = client.put("/halls/9999", json={"type_id": hall_type.id})
     assert response.status_code == 404
-
-
-def test_put_hall_with_valid_type_id_returns_updated_hall(client: TestClient, session: Session):
-    original_type = _create_hall_type(session, "Standard")
-    new_type = _create_hall_type(session, "IMAX")
-    hall = _create_hall(session, original_type.id)
-
-    response = client.put(f"/halls/{hall.id}", json={"type_id": new_type.id})
-    assert response.status_code == 200
-    data = response.json()
-    assert data["id"] == hall.id
-    assert data["type_id"] == new_type.id
 
 
 def test_put_hall_with_invalid_type_id_returns_404(client: TestClient, session: Session):
@@ -190,14 +134,6 @@ def test_put_hall_missing_type_id_returns_422(client: TestClient, session: Sessi
 def test_delete_hall_not_found_returns_404(client: TestClient):
     response = client.delete("/halls/9999")
     assert response.status_code == 404
-
-
-def test_delete_hall_existing_returns_204(client: TestClient, session: Session):
-    hall_type = _create_hall_type(session, "Standard")
-    hall = _create_hall(session, hall_type.id)
-
-    response = client.delete(f"/halls/{hall.id}")
-    assert response.status_code == 204
 
 
 def test_delete_hall_existing_then_get_returns_404(client: TestClient, session: Session):

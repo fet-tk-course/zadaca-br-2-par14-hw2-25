@@ -11,9 +11,9 @@ def get_halls(
 	type_name: Optional[str] = Query(default=None, description="Filter by hall type name"),
 	session: Session = Depends(get_session)
 ):
-	stmt = select(Hall)
+	stmt = select(Hall).join(HallType)
 	if type_name is not None:
-		stmt = stmt.join(HallType).where(HallType.type_name == type_name)
+		stmt = stmt.where(HallType.type_name == type_name)
 	return session.exec(stmt).all()
 
 @router.get("/with-type-name", response_model=list[HallRead])
