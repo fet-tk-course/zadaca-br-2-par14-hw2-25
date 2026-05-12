@@ -49,9 +49,25 @@ def test_create_user(client: TestClient):
 
 def test_get_users(client: TestClient):
     # Test dohvatanja liste korisnika
+    created_response = client.post("/users", json={
+        "first_name": "Ivana",
+        "last_name": "Ivic",
+        "email": "ivana@example.com",
+        "phone_number": "064555666",
+        "loyalty_points": 5,
+        "is_active": True
+    })
+    assert created_response.status_code == 201
+    created_user = created_response.json()
+
     response = client.get("/users")
     assert response.status_code == 200
-    assert isinstance(response.json(), list)
+    users = response.json()
+    assert isinstance(users, list)
+    assert any(
+        user["id"] == created_user["id"] and user["email"] == created_user["email"]
+        for user in users
+    )
 
 
 def test_get_user_not_found(client: TestClient):
