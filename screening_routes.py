@@ -174,7 +174,7 @@ def patch_screening(screening_id: int, screening_in: ScreeningUpdate, session: S
 	if not db_screening:
 		raise HTTPException(status_code=404, detail="Projekcija nije pronadjena")
 
-	data = screening_in.model_dump(exclude_unset=True)
+	data = screening_in.model_dump(exclude_unset=True, exclude_none=True)  # <-- dodano exclude_none=True
 
 	if "hall_id" in data:
 		hall = session.get(Hall, data["hall_id"])
@@ -193,8 +193,11 @@ def patch_screening(screening_id: int, screening_in: ScreeningUpdate, session: S
 		raise HTTPException(status_code=409, detail="U toj sali vec postoji projekcija u tom terminu")
 
 	for key, value in data.items():
-		setattr(db_screening, key, value)
-
+		if (key == "start_time" and value is not None) or (key == "end_time" and value is not None):
+			value = _normalize_datetime(value)
+			setattr(db_screening, key, value)
+		else:
+			setattr(db_screening, key, value)
 	session.add(db_screening)
 	session.commit()
 	session.refresh(db_screening)
