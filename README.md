@@ -3,13 +3,15 @@
 
 ## O projektu
 
-[Ovdje ukratko opišite domenu vaše aplikacije i njenu svrhu]
+Aplikacija predstavlja backend sistem za upravljanje kino repertoarom.
+Omogućava evidenciju filmova i žanrova, a planirana je evidencija sala, 
+projekcija, korisnika i rezervacija.
 
 ## Tim
 
-- **Student A**: [Ime Prezime] - resurs: `/resursi_a`
-- **Student B**: [Ime Prezime] - resurs: `/resursi_b`
-- **Student C**: [Amina Sarhatlic] - resurs: `/resursi_c`
+- **Student A**: Nejla Kavazović - resurs: `/genres`, `/movies`
+- **Student B**: Elnur Bjelić - resurs: `/seat-types`, `/hall-types`, `/halls`, `/seats`, `/screenings`
+- **Student C**: Ime Prezime - resurs: `/resursi-c`
 
 ## Instalacija i pokretanje
 
@@ -49,28 +51,100 @@ uvicorn main:app --reload
 
 ## API Endpointi
 
-### Resurs A: `/resursi_a`
+### Resurs A:
 
+### Žanrovi `/genres`
 | Metoda | Ruta | Opis |
-|--------|------|------|
-| GET | `/resursi_a` | Lista svih resursa (sa query filterom) |
-| GET | `/resursi_a/{id}` | Dohvatanje resursa po ID-u |
-| POST | `/resursi_a` | Kreiranje novog resursa |
-| PUT | `/resursi_a/{id}` | Potpuna zamjena resursa |
-| PATCH | `/resursi_a/{id}` | Djelimično ažuriranje resursa |
-| DELETE | `/resursi_a/{id}` | Brisanje resursa |
+| --- | --- | --- |
+| GET | /genres | Lista svih žanrova (filter: ?is_active=true/false) |
+| GET | /genres/{id} | Dohvatanje žanra po ID-u |
+| POST | /genres | Kreiranje novog žanra (status 201) |
+| PUT | /genres/{id} | Potpuna zamjena žanra |
+| PATCH | /genres/{id} | Djelimično ažuriranje žanra |
+| DELETE | /genres/{id} | Brisanje žanra (status 204) |
+
+### Filmovi `/movies`
+| Metoda | Ruta | Opis |
+| --- | --- | --- |
+| GET | /movies | Lista svih filmova (filter: ?is_currently_showing=true/false) |
+| GET | /movies/{id} | Dohvatanje filma po ID-u |
+| POST | /movies | Kreiranje novog filma (status 201) |
+| PUT | /movies/{id} | Potpuna zamjena filma |
+| PATCH | /movies/{id} | Djelimično ažuriranje filma |
+| DELETE | /movies/{id} | Brisanje filma (status 204) |
 
 **Primjer zahtjeva:**
+
+#### Kreiranje novog žanra
 ```bash
-# Kreiranje novog resursa
-curl -X POST "http://localhost:8000/resursi_a" \
+curl -X POST "http://localhost:8000/genres" \
   -H "Content-Type: application/json" \
-  -d '{"polje1": "vrijednost", "polje2": 123}'
+  -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "is_active": true}'
 ```
 
-### Resurs B: `/resursi_b`
+### Resurs B:
 
-[Analogno kao za Resurs A]
+### Tipovi sjedala `/seat-types`
+Metoda | Ruta | Opis
+| --- | --- | --- |
+GET | /seat-types | Lista svih tipova sjedala (filter: ?name=seat_type_name)
+GET | /seat-types/{id} | Dohvatanje tipa sjedala po ID-u
+POST | /seat-types | Kreiranje novog tipa sjedala (status 201)
+PUT | /seat-types/{id} | Potpuna zamjena tipa sjedala
+DELETE | /seat-types/{id} | Brisanje tipa sjedala (status 204)
+
+### Tipovi dvorana `/hall-types`
+Metoda | Ruta | Opis
+| --- | --- | --- |
+GET | /hall-types | Lista svih tipova dvorana (filter: ?name=hall_type_name)
+GET | /hall-types/{id} | Dohvatanje tipa dvorana po ID-u
+POST | /hall-types | Kreiranje novog tipa dvorana (status 201)
+PUT | /hall-types/{id} | Potpuna zamjena tipa dvorana
+DELETE | /hall-types/{id} | Brisanje tipa dvorana (status 204)
+
+### Sjedala `/seats`
+Metoda | Ruta | Opis
+| --- | --- | --- |
+GET | /seats | Lista svih sjedala (filteri: `?hall_id=broj`, `?type_id=broj`, `?type_name=string`)
+GET | /seats/{id} | Dohvatanje sjedala po ID-u
+POST | /seats | Kreiranje novog sjedala (status 201)
+PUT | /seats/{id} | Potpuna zamjena sjedala
+PATCH | /seats/{id} | Djelimično ažuriranje sjedala
+DELETE | /seats/{id} | Brisanje sjedala (status 204)
+
+### Sale `/halls`
+Metoda | Ruta | Opis
+| --- | --- | --- |
+GET | /halls | Lista svih sala (opcionalni filter: `?type_name=string`)
+GET | /halls/with-type-name | Lista svih sala sa nazivom tipa
+GET | /halls/{id} | Dohvatanje sale po ID-u
+GET | /halls/{id}/with-type-name | Dohvatanje sale po ID-u sa nazivom tipa
+POST | /halls | Kreiranje nove sale (status 201)
+PUT | /halls/{id} | Izmjena postojeće sale po ID-u
+DELETE | /halls/{id} | Brisanje sale (status 204)
+
+**Napomena:** U GET ruti za sjedala nije dozvoljeno istovremeno slati `type_id` i `type_name`.
+
+### Projekcije `/screenings`
+Metoda | Ruta | Opis
+| --- | --- | --- |
+GET | /screenings | Lista svih projekcija (filteri: `?hall_id=broj`, `?movie_id=broj`)
+GET | /screenings/{id} | Dohvatanje projekcije po ID-u
+GET | /screenings/{id}/with-details | Dohvatanje projekcije po ID-u sa podacima o sali i filmu
+POST | /screenings | Kreiranje nove projekcije (status 201, provjera konflikta termina u istoj sali)
+PUT | /screenings/{id} | Potpuna zamjena projekcije (provjera konflikta termina u istoj sali)
+PATCH | /screenings/{id} | Djelimično ažuriranje projekcije (provjera konflikta termina u istoj sali)
+DELETE | /screenings/{id} | Brisanje projekcije (status 204)
+
+**Primjer zahtjeva:**
+
+#### Dohvatanje detaljnih informacija o projekciji
+
+```bash
+curl -X 'GET' \
+  'http://localhost:8000/screenings/1/with-details' \
+  -H 'accept: application/json'
+```
 
 ### Resurs C: `/resursi_c`
 ### Student C: Modul za upravljanje korisnicima i rezervacijama
@@ -97,18 +171,20 @@ curl -X POST "http://localhost:8000/student_c/users" \
      -d '{"first_name": "Amina", "last_name": "Test", "email": "amina@example.com", "age": 22, "phone_number": "061123456"}'
 ## Korištenje AI alat
 
-### Alat: [GitHub Copilot / ChatGPT / ...]
-**Model:** [GPT-4, Copilot model, ...]
+Alat: Claude (Anthropic), GitHub Copilot
+Model: Claude Sonnet 4.6, Copilot Model 
 
-**Primjer 1:**
-- **Prompt:** [Npr. "Kreiraj SQLModel klasu za entitet Knjiga sa poljima naslov, autor, godina, isbn"]
-- **Kako je pomoglo:** [Opis]
-- **Prilagodbe:** [Da li ste morali prilagoditi generisani kod]
+Primjer 1:
+Prompt: "Napravi SQLModel entitet za Film sa najmanje 5 polja različitih tipova, 
+uključujući string, int, float, bool i Optional polja"
+Kako je pomoglo: Generisana je kompletna struktura klase sa svim potrebnim poljima
+Prilagodbe: Uklonjen tmdb_id, dodan director i trailer_url, ispravljeni encoding problemi
 
-**Primjer 2:**
-- **Prompt:** [Npr. "Implementiraj PATCH endpoint sa exclude_unset=True"]
-- **Kako je pomoglo:** [Opis]
-- **Prilagodbe:** [Opis]
+Primjer 2:
+Prompt: "Implementiraj kompletne FastAPI CRUD rute za Genre i Movie entitet 
+koristeći dependency injection sa Depends i SQLModel Session"
+Kako je pomoglo: Generisane su sve rute uključujući exclude_unset=True za PATCH
+Prilagodbe: Prilagođene poruke grešaka, usklađeni nazivi funkcija
 
 ## STUDENT C:
 
@@ -134,4 +210,5 @@ curl -X POST "http://localhost:8000/student_c/users" \
 
 ## Napomene
 
-[Dodatne napomene specifične za vašu implementaciju]
+Aplikacija je testirana na Python 3.12.10 bez virtualnog okruženja.
+Za pokretanje koristiti: py -3.12 -m uvicorn main:app --reload
