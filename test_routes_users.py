@@ -138,10 +138,20 @@ def test_delete_user(client: TestClient):
 
 def test_filter_users_by_active(client: TestClient):
     # Test filtriranja korisnika po is_active
-    client.post("/users", json={"first_name": "Aktivan", "last_name": "Korisnik", "email": "aktivan@example.com", "phone_number": "065111111", "loyalty_points": 0, "is_active": True})
-    client.post("/users", json={"first_name": "Neaktivan", "last_name": "Korisnik", "email": "neaktivan@example.com", "phone_number": "065222222", "loyalty_points": 0, "is_active": False})
+    active_user = client.post("/users", json={"first_name": "Aktivan", "last_name": "Korisnik", "email": "aktivan@example.com", "phone_number": "065111111", "loyalty_points": 0, "is_active": True}).json()
+    inactive_user = client.post("/users", json={"first_name": "Neaktivan", "last_name": "Korisnik", "email": "neaktivan@example.com", "phone_number": "065222222", "loyalty_points": 0, "is_active": False}).json()
 
     response = client.get("/users?is_active=true")
     assert response.status_code == 200
-    for user in response.json():
+    users = response.json()
+    assert isinstance(users, list)
+
+    returned_ids = [user["id"] for user in users]
+    returned_emails = [user["email"] for user in users]
+
+    assert active_user["id"] in returned_ids
+    assert inactive_user["id"] not in returned_ids
+    assert inactive_user["email"] not in returned_emails
+
+    for user in users:
         assert user["is_active"] == True
