@@ -11,7 +11,7 @@ projekcija, korisnika i rezervacija.
 
 - **Student A**: Nejla Kavazović - resurs: `/genres`, `/movies`
 - **Student B**: Elnur Bjelić - resurs: `/seat-types`, `/hall-types`, `/halls`, `/seats`, `/screenings`
-- **Student C**: Ime Prezime - resurs: `/resursi-c`
+- **Student C**: Amina Sarhatlić - resurs: `//student_c/users, /student_c/reservations`
 
 ## Instalacija i pokretanje
 
