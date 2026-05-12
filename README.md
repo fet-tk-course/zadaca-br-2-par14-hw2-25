@@ -10,7 +10,7 @@ projekcija, korisnika i rezervacija.
 ## Tim
 
 - **Student A**: Nejla Kavazović - resurs: `/genres`, `/movies`
-- **Student B**: Elnur Bjelić - resurs: `/seat-types`
+- **Student B**: Elnur Bjelić - resurs: `/seat-types`, `/hall-types`, `/halls`, `/seats`, `/screenings`
 - **Student C**: Ime Prezime - resurs: `/resursi-c`
 
 ## Instalacija i pokretanje
@@ -111,6 +111,17 @@ POST | /seats | Kreiranje novog sjedala (status 201)
 PUT | /seats/{id} | Potpuna zamjena sjedala
 PATCH | /seats/{id} | Djelimično ažuriranje sjedala
 DELETE | /seats/{id} | Brisanje sjedala (status 204)
+
+### Sale `/halls`
+Metoda | Ruta | Opis
+| --- | --- | --- |
+GET | /halls | Lista svih sala (opcionalni filter: `?type_name=string`)
+GET | /halls/with-type-name | Lista svih sala sa nazivom tipa
+GET | /halls/{id} | Dohvatanje sale po ID-u
+GET | /halls/{id}/with-type-name | Dohvatanje sale po ID-u sa nazivom tipa
+POST | /halls | Kreiranje nove sale (status 201)
+PUT | /halls/{id} | Izmjena postojeće sale po ID-u
+DELETE | /halls/{id} | Brisanje sale (status 204)
 
 **Napomena:** U GET ruti za sjedala nije dozvoljeno istovremeno slati `type_id` i `type_name`.
 
