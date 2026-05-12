@@ -2,8 +2,6 @@ from sqlmodel import SQLModel, Field
 from typing import Optional
 
 
-# ==================== GENRE ====================
-
 class Genre(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
@@ -17,7 +15,6 @@ class GenreCreate(SQLModel):
     name: str
     description: Optional[str] = None
     popularity_score: float = 0.0
-    movie_count: int = 0
     is_active: bool = True
 
 
@@ -25,11 +22,8 @@ class GenreUpdate(SQLModel):
     name: Optional[str] = None
     description: Optional[str] = None
     popularity_score: Optional[float] = None
-    movie_count: Optional[int] = None
     is_active: Optional[bool] = None
 
-
-# ==================== MOVIE ====================
 
 class Movie(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
