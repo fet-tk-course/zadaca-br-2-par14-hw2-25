@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
+from datetime import datetime
 
 # TODO: Student B - Definiši svoj SQLModel entitet ovdje
 # 
@@ -63,4 +64,61 @@ class SeatCreate(SQLModel):
 class SeatUpdate(SQLModel):
 	type_id: Optional[int] = None
 	hall_id: Optional[int] = None
+
+
+class Screening(SQLModel, table=True):
+	__tablename__ = "screenings"
+	id: Optional[int] = Field(default=None, primary_key=True)
+	start_time: datetime
+	end_time: datetime
+	has_break: bool = False
+	base_ticket_price: float
+	hall_id: int = Field(foreign_key="halls.id")
+	movie_id: int = Field(foreign_key="movie.id")
+
+
+class ScreeningCreate(SQLModel):
+	start_time: datetime
+	end_time: datetime
+	has_break: bool = False
+	base_ticket_price: float
+	hall_id: int
+	movie_id: int
+
+
+class ScreeningUpdate(SQLModel):
+	start_time: Optional[datetime] = None
+	end_time: Optional[datetime] = None
+	has_break: Optional[bool] = None
+	base_ticket_price: Optional[float] = None
+	hall_id: Optional[int] = None
+	movie_id: Optional[int] = None
+
+
+class ScreeningHallRead(SQLModel):
+	id: int
+	type_id: int
+	type_name: str
+
+
+class ScreeningMovieRead(SQLModel):
+	id: int
+	title: str
+	director: str
+	duration_minutes: int
+	release_year: int
+	rating: float
+	trailer_url: Optional[str] = None
+	is_currently_showing: bool
+	genre_id: Optional[int] = None
+
+
+class ScreeningRead(SQLModel):
+	id: int
+	start_time: datetime
+	end_time: datetime
+	has_break: bool
+	base_ticket_price: float
+	hall: ScreeningHallRead
+	movie: ScreeningMovieRead
 
