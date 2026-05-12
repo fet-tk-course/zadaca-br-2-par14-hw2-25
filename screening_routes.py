@@ -25,9 +25,10 @@ def _screening_overlaps(
 	if exclude_screening_id is not None:
 		statement = statement.where(Screening.id != exclude_screening_id)
 
+	normalized_start_time = _normalize_datetime(start_time)
+	normalized_end_time = _normalize_datetime(end_time)
+
 	for existing_screening in session.exec(statement).all():
-		normalized_start_time = _normalize_datetime(start_time)
-		normalized_end_time = _normalize_datetime(end_time)
 		normalized_existing_start = _normalize_datetime(existing_screening.start_time)
 		normalized_existing_end = _normalize_datetime(existing_screening.end_time)
 		if normalized_start_time < normalized_existing_end and normalized_end_time > normalized_existing_start:
