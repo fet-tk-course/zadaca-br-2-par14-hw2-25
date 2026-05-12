@@ -5,6 +5,7 @@ from sqlmodel import Session, select
 from database import create_db_and_tables, engine, get_session
 from routes_a import router as router_a
 from routes_b import router as router_b
+from routes_c import router as router_c
 from models_a import Genre, Movie
 
 
@@ -66,6 +67,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+app.include_router(router_c, prefix="/student_c", tags=["Modul Korisnici i Rezervacije"])
 
 @app.get("/")
 def read_root():
