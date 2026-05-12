@@ -51,7 +51,7 @@ uvicorn main:app --reload
 
 ## API Endpointi
 
-### Endpointi za žanrove i filmove
+### Resurs A:
 
 ### Žanrovi `/genres`
 | Metoda | Ruta | Opis |
@@ -84,14 +84,21 @@ curl -X POST "http://localhost:8000/genres" \
 
 ### Resurs B:
 
-### Tipov sjedala `/seat-types`
+### Tipovi sjedala `/seat-types`
 Metoda | Ruta | Opis
-GET | /seat-types | Lista svih tipova sjedal (filter: ?name=seat_type_name)
+GET | /seat-types | Lista svih tipova sjedala (filter: ?name=seat_type_name)
 GET | /seat-types/{id} | Dohvatanje tipa sjedala po ID-u
 POST | /seat-types | Kreiranje novog tipa sjedala (status 201)
 PUT | /seat-types/{id} | Potpuna zamjena tipa sjedala
-PATCH | /seat-types/{id} | Djelimično ažuriranje tipa sjedala
 DELETE | /seat-types/{id} | Brisanje tipa sjedala (status 204)
+
+### Tipovi dvorana `/hall-types`
+Metoda | Ruta | Opis
+GET | /hall-types | Lista svih tipova dvorana (filter: ?name=hall_type_name)
+GET | /hall-types/{id} | Dohvatanje tipa dvorana po ID-u
+POST | /hall-types | Kreiranje novog tipa dvorana (status 201)
+PUT | /hall-types/{id} | Potpuna zamjena tipa dvorana
+DELETE | /hall-types/{id} | Brisanje tipa dvorana (status 204)
 
 **Primjer zahtjeva:**
 
