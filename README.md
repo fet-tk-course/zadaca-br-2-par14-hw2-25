@@ -127,7 +127,7 @@ DELETE | /screenings/{id} | Brisanje projekcije (status 204)
 
 **Primjer zahtjeva:**
 
-# Dohvatanje detaljnih informacija o projekciji
+#### Dohvatanje detaljnih informacija o projekciji
 
 ```bash
 curl -X 'GET' \
