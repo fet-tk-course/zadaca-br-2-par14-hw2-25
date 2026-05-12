@@ -237,7 +237,6 @@ def _reset_seed_tables(session: Session) -> None:
 
 def seed_all_tables() -> None:
 	with Session(engine) as session:
-		_reset_seed_tables(session)
 		genres = _seed_genres(session)
 		movies = _seed_movies(session, genres)
 		_sync_genre_movie_counts(session, genres)
