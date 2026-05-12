@@ -28,6 +28,7 @@ app = FastAPI(
 def read_root():
     return {"message": "Zadaća 2 - REST API"}
 
+app.include_router(router_users)
 
 app.include_router(router_a)
 app.include_router(router_b)
