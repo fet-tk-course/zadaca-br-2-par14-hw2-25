@@ -24,3 +24,22 @@ class UserUpdate(SQLModel):
     email:Optional[str]=None
     age:Optional[int]=None
     phone_number:Optional[str]=None
+
+class Reservation(SQLModel, table=True):
+    id:Optional[int]=Field(default=None, primary_key=True)
+    user_id:int
+    screening_id:int
+    seat_id:int
+    price:float
+    confirmed:bool=False
+
+class ReservationCreate(SQLModel):
+    user_id:int
+    screening_id:int
+    seat_id:int
+    price:float
+
+class ReservationUpdate(SQLModel):
+    seat_id:Optional[int]=None
+    price:Optional[float]=None
+    confirmed:Optional[bool]=None
