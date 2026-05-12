@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import SQLModel, Session, create_engine
@@ -187,6 +187,40 @@ def test_create_screening_overlapping_same_hall_returns_409(client: TestClient, 
 		json={
 			"start_time": "2026-05-12T19:00:00",
 			"end_time": "2026-05-12T21:00:00",
+			"has_break": True,
+			"base_ticket_price": 12.5,
+			"hall_id": hall.id,
+			"movie_id": second_movie.id,
+		},
+	)
+	assert response.status_code == 409
+
+
+def test_create_screening_overlapping_same_hall_with_timezone_returns_409(client: TestClient, session: Session):
+	hall_type = _create_hall_type(session)
+	hall = _create_hall(session, hall_type.id)
+	first_movie = _create_movie(session)
+	second_movie = _create_movie(session)
+
+	first_start = datetime(2026, 5, 12, 18, 0)
+	first_end = datetime(2026, 5, 12, 20, 0)
+	first_screening = Screening(
+		start_time=first_start,
+		end_time=first_end,
+		has_break=True,
+		base_ticket_price=12.5,
+		hall_id=hall.id,
+		movie_id=first_movie.id,
+	)
+	session.add(first_screening)
+	session.commit()
+	session.refresh(first_screening)
+
+	response = client.post(
+		"/screenings",
+		json={
+			"start_time": "2026-05-12T19:00:00+02:00",
+			"end_time": "2026-05-12T21:00:00+02:00",
 			"has_break": True,
 			"base_ticket_price": 12.5,
 			"hall_id": hall.id,

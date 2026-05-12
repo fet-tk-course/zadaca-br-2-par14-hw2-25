@@ -8,6 +8,12 @@ from models_b import Hall, HallType, Screening, ScreeningCreate, ScreeningHallRe
 router = APIRouter(prefix="/screenings", tags=["Screenings"])
 
 
+def _normalize_datetime(value):
+	if value.tzinfo is None:
+		return value
+	return value.replace(tzinfo=None)
+
+
 def _screening_overlaps(
 	session: Session,
 	hall_id: int,
@@ -20,7 +26,11 @@ def _screening_overlaps(
 		statement = statement.where(Screening.id != exclude_screening_id)
 
 	for existing_screening in session.exec(statement).all():
-		if start_time < existing_screening.end_time and end_time > existing_screening.start_time:
+		normalized_start_time = _normalize_datetime(start_time)
+		normalized_end_time = _normalize_datetime(end_time)
+		normalized_existing_start = _normalize_datetime(existing_screening.start_time)
+		normalized_existing_end = _normalize_datetime(existing_screening.end_time)
+		if normalized_start_time < normalized_existing_end and normalized_end_time > normalized_existing_start:
 			return True
 	return False
 
