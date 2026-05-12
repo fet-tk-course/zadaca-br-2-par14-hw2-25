@@ -6,10 +6,10 @@ from database import get_session
 from models_users import User, UserCreate, UserUpdate
 
 
-router = APIRouter()
+router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/users", response_model=list[User])
+@router.get("/", response_model=list[User])
 def get_users(
     is_active: Optional[bool] = Query(default=None, description="Filter po aktivnosti korisnika"),
     session: Session = Depends(get_session)
@@ -22,7 +22,7 @@ def get_users(
     return users
 
 
-@router.get("/users/{user_id}", response_model=User)
+@router.get("/{user_id}", response_model=User)
 def get_user(user_id: int, session: Session = Depends(get_session)):
     # Dohvatanje jednog korisnika po ID-u
     user = session.get(User, user_id)
@@ -31,7 +31,7 @@ def get_user(user_id: int, session: Session = Depends(get_session)):
     return user
 
 
-@router.post("/users", response_model=User, status_code=201)
+@router.post("/", response_model=User, status_code=201)
 def create_user(user: UserCreate, session: Session = Depends(get_session)):
     # Kreiranje novog korisnika
     db_user = User.model_validate(user)
@@ -41,7 +41,7 @@ def create_user(user: UserCreate, session: Session = Depends(get_session)):
     return db_user
 
 
-@router.put("/users/{user_id}", response_model=User)
+@router.put("/{user_id}", response_model=User)
 def update_user(user_id: int, user: UserCreate, session: Session = Depends(get_session)):
     # Potpuna zamjena korisnika
     db_user = session.get(User, user_id)
@@ -56,7 +56,7 @@ def update_user(user_id: int, user: UserCreate, session: Session = Depends(get_s
     return db_user
 
 
-@router.patch("/users/{user_id}", response_model=User)
+@router.patch("/{user_id}", response_model=User)
 def patch_user(user_id: int, user: UserUpdate, session: Session = Depends(get_session)):
     # Djelimično ažuriranje korisnika - ažuriraju se samo poslana polja
     db_user = session.get(User, user_id)
@@ -71,7 +71,7 @@ def patch_user(user_id: int, user: UserUpdate, session: Session = Depends(get_se
     return db_user
 
 
-@router.delete("/users/{user_id}", status_code=204)
+@router.delete("/{user_id}", status_code=204)
 def delete_user(user_id: int, session: Session = Depends(get_session)):
     # Brisanje korisnika po ID-u
     db_user = session.get(User, user_id)
