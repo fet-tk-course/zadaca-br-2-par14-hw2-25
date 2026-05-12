@@ -4,6 +4,7 @@ from database import create_db_and_tables, get_session
 from routes_a import router as router_a
 from routes_b import router as router_b
 from routes_c import router as router_c
+from routes_users import router as router_users
 from seed_database import seed_all_tables
 
 

@@ -127,12 +127,18 @@ DELETE | /screenings/{id} | Brisanje projekcije (status 204)
 
 **Primjer zahtjeva:**
 
-# Kreiranje nove projekcije
-//To be added
+# Dohvatanje detaljnih informacija o projekciji
+
+```bash
+curl -X 'GET' \
+  'http://localhost:8000/screenings/1/with-details' \
+  -H 'accept: application/json'
+```
+
 ## Korištenje AI alata
 
-Alat: Claude (Anthropic)
-Model: Claude Sonnet 4.6
+Alat: Claude (Anthropic), GitHub Copilot
+Model: Claude Sonnet 4.6, Copilot Model 
 
 Primjer 1:
 Prompt: "Napravi SQLModel entitet za Film sa najmanje 5 polja različitih tipova, 
