@@ -9,8 +9,9 @@ projekcija, korisnika i rezervacija.
 
 ## Tim
 
-- **Student A**: Nejla Kavazović - resurs: /genres, /movies
-- **Student B**: [Ime Prezime] - resurs: `/resursi_b`
+- **Student A**: Nejla Kavazović - resurs: `/genres`, `/movies`
+- **Student B**: Elnur Bjelić - resurs: `/seat-types`
+- **Student C**: Ime Prezime - resurs: `/resursi-c`
 
 ## Instalacija i pokretanje
 
@@ -81,10 +82,21 @@ curl -X POST "http://localhost:8000/genres" \
   -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "is_active": true}'
 ```
 
-### Resurs B: `/resursi_b`
+### Resurs B:
 
-[Analogno kao za Resurs A]
+### Tipov sjedala `/seat-types`
+Metoda | Ruta | Opis
+GET | /seat-types | Lista svih tipova sjedal (filter: ?name=seat_type_name)
+GET | /seat-types/{id} | Dohvatanje tipa sjedala po ID-u
+POST | /seat-types | Kreiranje novog tipa sjedala (status 201)
+PUT | /seat-types/{id} | Potpuna zamjena tipa sjedala
+PATCH | /seat-types/{id} | Djelimično ažuriranje tipa sjedala
+DELETE | /seat-types/{id} | Brisanje tipa sjedala (status 204)
 
+**Primjer zahtjeva:**
+
+# Kreiranje nove projekcije
+//To be added
 ## Korištenje AI alata
 
 Alat: Claude (Anthropic)

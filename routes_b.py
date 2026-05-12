@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import Session, select
+from fastapi import APIRouter
 
-from database import get_session
+from seat_type_routes import router as seat_type_router
 
-router = APIRouter(prefix="/resursi_b", tags=["Resurs B"])
+router = APIRouter()
+
+router.include_router(seat_type_router)
