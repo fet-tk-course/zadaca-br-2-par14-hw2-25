@@ -141,7 +141,7 @@ def create_screening(screening_in: ScreeningCreate, session: Session = Depends(g
 
 
 @router.put("/{screening_id}", response_model=Screening)
-def update_screening(screening_id: int, screening_in: ScreeningCreate, session: Session = Depends(get_session)):
+def put_screening(screening_id: int, screening_in: ScreeningCreate, session: Session = Depends(get_session)):
 	db_screening = session.get(Screening, screening_id)
 	if not db_screening:
 		raise HTTPException(status_code=404, detail="Projekcija nije pronadjena")
