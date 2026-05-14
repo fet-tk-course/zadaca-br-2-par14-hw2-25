@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
+from pydantic import field_validator
 
 
 class Genre(SQLModel, table=True):
@@ -16,6 +17,20 @@ class GenreCreate(SQLModel):
     description: Optional[str] = None
     popularity_score: float = 0.0
     is_active: bool = True
+
+    @field_validator('name')
+    @classmethod
+    def name_ne_smije_biti_prazan(cls, v):
+        if not v.strip():
+            raise ValueError('Name ne smije biti prazan string')
+        return v.strip()
+
+    @field_validator('popularity_score')
+    @classmethod
+    def popularity_score_mora_biti_nenegativan(cls, v):
+        if v < 0:
+            raise ValueError('Popularity score ne smije biti negativan')
+        return v
 
 
 class GenreUpdate(SQLModel):

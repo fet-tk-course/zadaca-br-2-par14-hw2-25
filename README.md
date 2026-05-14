@@ -82,6 +82,86 @@ curl -X POST "http://localhost:8000/genres" \
   -d '{"name": "Action", "description": "Akcioni filmovi", "popularity_score": 8.5, "is_active": true}'
 ```
 
+### Opis dodanog Z1 i Z2
+
+### Zadatak 1 - Validatori
+### 1a - validatori u modelu
+#### GenreCreate
+polje `name` 
+Ne smije biti prazan string  - pravilo
+`Name ne smije biti prazan string` -greška
+422 - HTTP status
+
+polje `popularity_score` 
+Mora biti >= 0 - pravilo
+`Popularity score ne smije biti negativan` - greška
+422 - HTTP status
+
+#### MovieCreate
+polje `title` 
+Ne smije biti prazan string - pravilo
+`Title ne smije biti prazan string` - greška
+422 - HTTP status
+
+polje `duration_minutes` 
+Mora biti > 0 - pravilo
+`Duration minutes mora biti veci od nule` - greška
+422 - HTTP status
+
+polje `rating` 
+Mora biti između 0.0 i 10.0 -pravilo
+`Rating mora biti između 0.0 i 10.0` - greška
+422 - HTTP status
+
+### 1b -  Provjera duplikata u POST endpointu
+`POST /genres` – vraća **409 Conflict** ako žanr s istim `name` već postoji
+`POST /movies` – vraća **409 Conflict** ako film s istim `title` već postoji
+
+Model `Movie` sadrži polje `genre_id` kao strani ključ koji referencira `genre.id` a veza predstavlja da jedan `Genre` može imati više `Movie` zapisa (one-to-many).
+
+### Z2 – Custom endpoint van CRUD-a
+
+#### GET /genres/statistika
+Vraća ukupan broj žanrova, broj aktivnih i prosječni popularity score
+
+**Zahtjev:**
+```bash
+curl -X GET "http://localhost:8000/genres/statistika"
+```
+
+**Očekivani odgovor:**
+```json
+{
+  "ukupno": 5,
+  "aktivnih": 4,
+  "prosjek_popularnosti": 7.35
+}
+```
+
+#### GET /movies/aktivni
+Vraća listu filmova koji se trenutno prikazuju (`is_currently_showing = true`)
+
+**Zahtjev:**
+```bash
+curl -X GET "http://localhost:8000/movies/aktivni"
+```
+
+**Očekivani odgovor:**
+```json
+[
+  {
+    "id": 1,
+    "title": "Inception",
+    "director": "Christopher Nolan",
+    "duration_minutes": 148,
+    "release_year": 2010,
+    "rating": 8.8,
+    "is_currently_showing": true,
+    "genre_id": 1
+  }
+]
+```
+
 ### Resurs B:
 
 ### Tipovi sjedala `/seat-types`

@@ -34,6 +34,19 @@ def get_genres(
     genres = session.exec(query).all()
     return genres
 
+@router.get("/genres/statistika")
+def genre_statistika(session: Session = Depends(get_session)):
+    genres = session.exec(select(Genre)).all()
+    ukupno = len(genres)
+    aktivnih = sum(1 for g in genres if g.is_active)
+    prosjek_popularnosti = (
+        sum(g.popularity_score for g in genres) / ukupno if ukupno > 0 else 0.0
+    )
+    return {
+        "ukupno": ukupno,
+        "aktivnih": aktivnih,
+        "prosjek_popularnosti": round(prosjek_popularnosti, 2)
+    }
 
 @router.get("/genres/{genre_id}", response_model=Genre)
 def get_genre(genre_id: int, session: Session = Depends(get_session)):
@@ -46,6 +59,9 @@ def get_genre(genre_id: int, session: Session = Depends(get_session)):
 
 @router.post("/genres", response_model=Genre, status_code=201)
 def create_genre(genre: GenreCreate, session: Session = Depends(get_session)):
+    existing = session.exec(select(Genre).where(Genre.name == genre.name)).first()
+    if existing:
+        raise HTTPException(status_code=409, detail="Žanr s tim imenom već postoji")
     # Kreiranje novog žanra
     db_genre = Genre.model_validate(genre)
     session.add(db_genre)
@@ -108,6 +124,12 @@ def get_movies(
     movies = session.exec(query).all()
     return movies
 
+@router.get("/movies/aktivni")
+def aktivni_filmovi(session: Session = Depends(get_session)):
+    movies = session.exec(
+        select(Movie).where(Movie.is_currently_showing == True)
+    ).all()
+    return movies
 
 @router.get("/movies/{movie_id}", response_model=Movie)
 def get_movie(movie_id: int, session: Session = Depends(get_session)):
@@ -120,6 +142,9 @@ def get_movie(movie_id: int, session: Session = Depends(get_session)):
 
 @router.post("/movies", response_model=Movie, status_code=201)
 def create_movie(movie: MovieCreate, session: Session = Depends(get_session)):
+    existing = session.exec(select(Movie).where(Movie.title == movie.title)).first()
+    if existing:
+        raise HTTPException(status_code=409, detail="Film s tim naslovom već postoji")
     # Kreiranje novog filma
     db_movie = Movie.model_validate(movie)
     session.add(db_movie)
