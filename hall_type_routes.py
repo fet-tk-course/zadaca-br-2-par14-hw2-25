@@ -29,6 +29,10 @@ def get_hall_type(hall_type_id: int, session: Session = Depends(get_session)):
 @router.post("", response_model=HallType, status_code=201)
 def create_hall_type(hall_type_in: HallTypeCreate, session: Session = Depends(get_session)):
 	db_hall_type = HallType.model_validate(hall_type_in)
+	query = select(HallType).where(HallType.type_name == hall_type_in.type_name)
+	hall_type_exists = session.exec(query).first()
+	if hall_type_exists:
+		raise HTTPException(status_code=409, detail="HallType with this name already exists")
 	session.add(db_hall_type)
 	session.commit()
 	session.refresh(db_hall_type)

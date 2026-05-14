@@ -29,12 +29,15 @@ def get_seat_type(seat_type_id: int, session: Session = Depends(get_session)):
 
 @router.post("", response_model=SeatType, status_code=201)
 def create_seat_type(seat_type_in: SeatTypeCreate, session: Session = Depends(get_session)):
-    """Create a new SeatType."""
-    db_seat_type = SeatType.model_validate(seat_type_in)
-    session.add(db_seat_type)
-    session.commit()
-    session.refresh(db_seat_type)
-    return db_seat_type
+	db_seat_type = SeatType.model_validate(seat_type_in)
+	query = select(SeatType).where(SeatType.type_name == seat_type_in.type_name)
+	seat_type_exists = session.exec(query).first()
+	if seat_type_exists:
+		raise HTTPException(status_code=409, detail="SeatType with this name already exists")
+	session.add(db_seat_type)
+	session.commit()
+	session.refresh(db_seat_type)
+	return db_seat_type
 
 @router.put("/{seat_type_id}", response_model=SeatType)
 def put_seat_type(seat_type_id: int, seat_type_in: SeatTypeCreate, session: Session = Depends(get_session)):
