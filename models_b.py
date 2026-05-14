@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 from datetime import datetime
@@ -15,6 +16,14 @@ class SeatType(SQLModel, table=True):
 
 class SeatTypeCreate(SQLModel):
 	type_name: str
+	
+	@field_validator("type_name")
+	@classmethod
+	def type_name_must_be_at_least_two_characters_long(cls, value):
+		if len(value) < 2:
+			raise ValueError("type_name must be at least 2 characters long")
+		return value
+
 
 
 class HallType(SQLModel, table=True):
@@ -84,6 +93,13 @@ class ScreeningCreate(SQLModel):
 	base_ticket_price: float
 	hall_id: int
 	movie_id: int
+
+	@field_validator("start_time")
+	@classmethod
+	def start_time_must_be_in_the_future(cls, value):
+		if value < datetime.now():
+			raise ValueError("start_time must be in the future")
+		return value
 
 
 class ScreeningUpdate(SQLModel):
