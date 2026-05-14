@@ -62,6 +62,27 @@ class MovieCreate(SQLModel):
     is_currently_showing: bool = True
     genre_id: Optional[int] = None
 
+    @field_validator('title')
+    @classmethod
+    def title_ne_smije_biti_prazan(cls, v):
+        if not v.strip():
+            raise ValueError('Title ne smije biti prazan string')
+        return v.strip()
+
+    @field_validator('duration_minutes')
+    @classmethod
+    def duration_mora_biti_pozitivan(cls, v):
+        if v <= 0:
+            raise ValueError('Duration minutes mora biti veci od nule')
+        return v
+
+    @field_validator('rating')
+    @classmethod
+    def rating_mora_biti_u_rasponu(cls, v):
+        if not (0.0 <= v <= 10.0):
+            raise ValueError('Rating mora biti između 0.0 i 10.0')
+        return v
+
 
 class MovieUpdate(SQLModel):
     title: Optional[str] = None
