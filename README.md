@@ -1,10 +1,11 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/wxDq4rbD)
+
 # Zadaća 2 - REST API aplikacija
 
 ## O projektu
 
 Aplikacija predstavlja backend sistem za upravljanje kino repertoarom.
-Omogućava evidenciju filmova i žanrova, a planirana je evidencija sala, 
+Omogućava evidenciju filmova i žanrova, a planirana je evidencija sala,
 projekcija, korisnika i rezervacija.
 
 ## Tim
@@ -23,12 +24,14 @@ projekcija, korisnika i rezervacija.
 ### Koraci
 
 1. Klonirajte repozitorij:
+
 ```bash
 git clone <url-repozitorija>
 cd <naziv-repozitorija>
 ```
 
 2. Kreirajte virtuelno okruženje:
+
 ```bash
 python -m venv venv
 ```
@@ -38,11 +41,13 @@ python -m venv venv
    - Linux/Mac: `source venv/bin/activate`
 
 4. Instalirajte zavisnosti:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 5. Pokrenite aplikaciju:
+
 ```bash
 uvicorn main:app --reload
 ```
@@ -54,28 +59,31 @@ uvicorn main:app --reload
 ### Resurs A:
 
 ### Žanrovi `/genres`
-| Metoda | Ruta | Opis |
-| --- | --- | --- |
-| GET | /genres | Lista svih žanrova (filter: ?is_active=true/false) |
-| GET | /genres/{id} | Dohvatanje žanra po ID-u |
-| POST | /genres | Kreiranje novog žanra (status 201) |
-| PUT | /genres/{id} | Potpuna zamjena žanra |
-| PATCH | /genres/{id} | Djelimično ažuriranje žanra |
-| DELETE | /genres/{id} | Brisanje žanra (status 204) |
+
+| Metoda | Ruta         | Opis                                               |
+| ------ | ------------ | -------------------------------------------------- |
+| GET    | /genres      | Lista svih žanrova (filter: ?is_active=true/false) |
+| GET    | /genres/{id} | Dohvatanje žanra po ID-u                           |
+| POST   | /genres      | Kreiranje novog žanra (status 201)                 |
+| PUT    | /genres/{id} | Potpuna zamjena žanra                              |
+| PATCH  | /genres/{id} | Djelimično ažuriranje žanra                        |
+| DELETE | /genres/{id} | Brisanje žanra (status 204)                        |
 
 ### Filmovi `/movies`
-| Metoda | Ruta | Opis |
-| --- | --- | --- |
-| GET | /movies | Lista svih filmova (filter: ?is_currently_showing=true/false) |
-| GET | /movies/{id} | Dohvatanje filma po ID-u |
-| POST | /movies | Kreiranje novog filma (status 201) |
-| PUT | /movies/{id} | Potpuna zamjena filma |
-| PATCH | /movies/{id} | Djelimično ažuriranje filma |
-| DELETE | /movies/{id} | Brisanje filma (status 204) |
+
+| Metoda | Ruta         | Opis                                                          |
+| ------ | ------------ | ------------------------------------------------------------- |
+| GET    | /movies      | Lista svih filmova (filter: ?is_currently_showing=true/false) |
+| GET    | /movies/{id} | Dohvatanje filma po ID-u                                      |
+| POST   | /movies      | Kreiranje novog filma (status 201)                            |
+| PUT    | /movies/{id} | Potpuna zamjena filma                                         |
+| PATCH  | /movies/{id} | Djelimično ažuriranje filma                                   |
+| DELETE | /movies/{id} | Brisanje filma (status 204)                                   |
 
 **Primjer zahtjeva:**
 
 #### Kreiranje novog žanra
+
 ```bash
 curl -X POST "http://localhost:8000/genres" \
   -H "Content-Type: application/json" \
@@ -85,56 +93,61 @@ curl -X POST "http://localhost:8000/genres" \
 ### Resurs B:
 
 ### Tipovi sjedala `/seat-types`
-Metoda | Ruta | Opis
-| --- | --- | --- |
-GET | /seat-types | Lista svih tipova sjedala (filter: ?name=seat_type_name)
-GET | /seat-types/{id} | Dohvatanje tipa sjedala po ID-u
-POST | /seat-types | Kreiranje novog tipa sjedala (status 201)
-PUT | /seat-types/{id} | Potpuna zamjena tipa sjedala
-DELETE | /seat-types/{id} | Brisanje tipa sjedala (status 204)
+
+| Metoda | Ruta             | Opis                                                     |
+| ------ | ---------------- | -------------------------------------------------------- |
+| GET    | /seat-types      | Lista svih tipova sjedala (filter: ?name=seat_type_name) |
+| GET    | /seat-types/{id} | Dohvatanje tipa sjedala po ID-u                          |
+| POST   | /seat-types      | Kreiranje novog tipa sjedala (status 201)                |
+| PUT    | /seat-types/{id} | Potpuna zamjena tipa sjedala                             |
+| DELETE | /seat-types/{id} | Brisanje tipa sjedala (status 204)                       |
 
 ### Tipovi dvorana `/hall-types`
-Metoda | Ruta | Opis
-| --- | --- | --- |
-GET | /hall-types | Lista svih tipova dvorana (filter: ?name=hall_type_name)
-GET | /hall-types/{id} | Dohvatanje tipa dvorana po ID-u
-POST | /hall-types | Kreiranje novog tipa dvorana (status 201)
-PUT | /hall-types/{id} | Potpuna zamjena tipa dvorana
-DELETE | /hall-types/{id} | Brisanje tipa dvorana (status 204)
+
+| Metoda | Ruta             | Opis                                                     |
+| ------ | ---------------- | -------------------------------------------------------- |
+| GET    | /hall-types      | Lista svih tipova dvorana (filter: ?name=hall_type_name) |
+| GET    | /hall-types/{id} | Dohvatanje tipa dvorana po ID-u                          |
+| POST   | /hall-types      | Kreiranje novog tipa dvorana (status 201)                |
+| PUT    | /hall-types/{id} | Potpuna zamjena tipa dvorana                             |
+| DELETE | /hall-types/{id} | Brisanje tipa dvorana (status 204)                       |
 
 ### Sjedala `/seats`
-Metoda | Ruta | Opis
-| --- | --- | --- |
-GET | /seats | Lista svih sjedala (filteri: `?hall_id=broj`, `?type_id=broj`, `?type_name=string`)
-GET | /seats/{id} | Dohvatanje sjedala po ID-u
-POST | /seats | Kreiranje novog sjedala (status 201)
-PUT | /seats/{id} | Potpuna zamjena sjedala
-PATCH | /seats/{id} | Djelimično ažuriranje sjedala
-DELETE | /seats/{id} | Brisanje sjedala (status 204)
+
+| Metoda | Ruta        | Opis                                                                                |
+| ------ | ----------- | ----------------------------------------------------------------------------------- |
+| GET    | /seats      | Lista svih sjedala (filteri: `?hall_id=broj`, `?type_id=broj`, `?type_name=string`) |
+| GET    | /seats/{id} | Dohvatanje sjedala po ID-u                                                          |
+| POST   | /seats      | Kreiranje novog sjedala (status 201)                                                |
+| PUT    | /seats/{id} | Potpuna zamjena sjedala                                                             |
+| PATCH  | /seats/{id} | Djelimično ažuriranje sjedala                                                       |
+| DELETE | /seats/{id} | Brisanje sjedala (status 204)                                                       |
 
 ### Sale `/halls`
-Metoda | Ruta | Opis
-| --- | --- | --- |
-GET | /halls | Lista svih sala (opcionalni filter: `?type_name=string`)
-GET | /halls/with-type-name | Lista svih sala sa nazivom tipa
-GET | /halls/{id} | Dohvatanje sale po ID-u
-GET | /halls/{id}/with-type-name | Dohvatanje sale po ID-u sa nazivom tipa
-POST | /halls | Kreiranje nove sale (status 201)
-PUT | /halls/{id} | Izmjena postojeće sale po ID-u
-DELETE | /halls/{id} | Brisanje sale (status 204)
+
+| Metoda | Ruta                       | Opis                                                     |
+| ------ | -------------------------- | -------------------------------------------------------- |
+| GET    | /halls                     | Lista svih sala (opcionalni filter: `?type_name=string`) |
+| GET    | /halls/with-type-name      | Lista svih sala sa nazivom tipa                          |
+| GET    | /halls/{id}                | Dohvatanje sale po ID-u                                  |
+| GET    | /halls/{id}/with-type-name | Dohvatanje sale po ID-u sa nazivom tipa                  |
+| POST   | /halls                     | Kreiranje nove sale (status 201)                         |
+| PUT    | /halls/{id}                | Izmjena postojeće sale po ID-u                           |
+| DELETE | /halls/{id}                | Brisanje sale (status 204)                               |
 
 **Napomena:** U GET ruti za sjedala nije dozvoljeno istovremeno slati `type_id` i `type_name`.
 
 ### Projekcije `/screenings`
-Metoda | Ruta | Opis
-| --- | --- | --- |
-GET | /screenings | Lista svih projekcija (filteri: `?hall_id=broj`, `?movie_id=broj`)
-GET | /screenings/{id} | Dohvatanje projekcije po ID-u
-GET | /screenings/{id}/with-details | Dohvatanje projekcije po ID-u sa podacima o sali i filmu
-POST | /screenings | Kreiranje nove projekcije (status 201, provjera konflikta termina u istoj sali)
-PUT | /screenings/{id} | Potpuna zamjena projekcije (provjera konflikta termina u istoj sali)
-PATCH | /screenings/{id} | Djelimično ažuriranje projekcije (provjera konflikta termina u istoj sali)
-DELETE | /screenings/{id} | Brisanje projekcije (status 204)
+
+| Metoda | Ruta                          | Opis                                                                            |
+| ------ | ----------------------------- | ------------------------------------------------------------------------------- |
+| GET    | /screenings                   | Lista svih projekcija (filteri: `?hall_id=broj`, `?movie_id=broj`)              |
+| GET    | /screenings/{id}              | Dohvatanje projekcije po ID-u                                                   |
+| GET    | /screenings/{id}/with-details | Dohvatanje projekcije po ID-u sa podacima o sali i filmu                        |
+| POST   | /screenings                   | Kreiranje nove projekcije (status 201, provjera konflikta termina u istoj sali) |
+| PUT    | /screenings/{id}              | Potpuna zamjena projekcije (provjera konflikta termina u istoj sali)            |
+| PATCH  | /screenings/{id}              | Djelimično ažuriranje projekcije (provjera konflikta termina u istoj sali)      |
+| DELETE | /screenings/{id}              | Brisanje projekcije (status 204)                                                |
 
 **Primjer zahtjeva:**
 
@@ -147,23 +160,25 @@ curl -X 'GET' \
 ```
 
 ### Resurs C: `/resursi_c`
+
 ### Student C: Modul za upravljanje korisnicima i rezervacijama
 
 #### Resursi i endpointi: `/student_c/users` i `/student_c/reservations`
 
-| Metoda | Ruta | Opis |
-|--------|------|-------|
-| POST | `/student_c/users` | Registracija novog korisnika u sistem |
-| GET | `/student_c/users` | Pregled svih korisnika (moguć filter po godinama) |
-| GET | `/student_c/users/{id}` | Detaljan prikaz jednog korisnika preko ID-a |
-| PATCH | `/student_c/users/{id}` | Djelimična izmjena podataka korisnika |
-| DELETE | `/student_c/users/{id}` | Uklanjanje korisnika iz baze |
-| GET | `/student_c/reservations` | Lista svih rezervacija u sistemu |
-| POST | `/student_c/reservations` | Kreiranje nove rezervacije za sjedište |
-| GET | `/student_c/reservations/{id}` | Dohvatanje detalja specifične rezervacije |
-| DELETE | `/student_c/reservations/{id}` | Otkazivanje rezervacije |
+| Metoda | Ruta                           | Opis                                              |
+| ------ | ------------------------------ | ------------------------------------------------- |
+| POST   | `/student_c/users`             | Registracija novog korisnika u sistem             |
+| GET    | `/student_c/users`             | Pregled svih korisnika (moguć filter po godinama) |
+| GET    | `/student_c/users/{id}`        | Detaljan prikaz jednog korisnika preko ID-a       |
+| PATCH  | `/student_c/users/{id}`        | Djelimična izmjena podataka korisnika             |
+| DELETE | `/student_c/users/{id}`        | Uklanjanje korisnika iz baze                      |
+| GET    | `/student_c/reservations`      | Lista svih rezervacija u sistemu                  |
+| POST   | `/student_c/reservations`      | Kreiranje nove rezervacije za sjedište            |
+| GET    | `/student_c/reservations/{id}` | Dohvatanje detalja specifične rezervacije         |
+| DELETE | `/student_c/reservations/{id}` | Otkazivanje rezervacije                           |
 
 **Primjer zahtjeva:**
+
 ```bash
 # Kreiranje korisnika
 curl -X POST "http://localhost:8000/student_c/users" \
@@ -172,16 +187,16 @@ curl -X POST "http://localhost:8000/student_c/users" \
 ## Korištenje AI alat
 
 Alat: Claude (Anthropic), GitHub Copilot
-Model: Claude Sonnet 4.6, Copilot Model 
+Model: Claude Sonnet 4.6, Copilot Model
 
 Primjer 1:
-Prompt: "Napravi SQLModel entitet za Film sa najmanje 5 polja različitih tipova, 
+Prompt: "Napravi SQLModel entitet za Film sa najmanje 5 polja različitih tipova,
 uključujući string, int, float, bool i Optional polja"
 Kako je pomoglo: Generisana je kompletna struktura klase sa svim potrebnim poljima
 Prilagodbe: Uklonjen tmdb_id, dodan director i trailer_url, ispravljeni encoding problemi
 
 Primjer 2:
-Prompt: "Implementiraj kompletne FastAPI CRUD rute za Genre i Movie entitet 
+Prompt: "Implementiraj kompletne FastAPI CRUD rute za Genre i Movie entitet
 koristeći dependency injection sa Depends i SQLModel Session"
 Kako je pomoglo: Generisane su sve rute uključujući exclude_unset=True za PATCH
 Prilagodbe: Prilagođene poruke grešaka, usklađeni nazivi funkcija
@@ -211,4 +226,20 @@ Prilagodbe: Prilagođene poruke grešaka, usklađeni nazivi funkcija
 ## Napomene
 
 Aplikacija je testirana na Python 3.12.10 bez virtualnog okruženja.
-Za pokretanje koristiti: py -3.12 -m uvicorn main:app --reload
+Za pokretanje koristiti: py -3.12 -m uvicorn main:app --
+
+
+# Provjera - Student Elnur Bjelić
+## Zadatak 1a
+
+Za zadatak 1a dodana su dva validatora, jedan u klasi SeatTypeCreate i drugi u klasi ScreeningCreate.
+Validator u klasi SeatTypeCreate provjerava da li uneseni naziv ima barem 2 karaktera, dok validator u klasi ScreeningCreate provjerava da li je vrijeme pocetka prikazivanja projekcije u buducnosti.
+
+## Zadatak 1b
+
+Za zadatak 1b dodana je provjera duplikata za tabelu (modele) SeatType i HallType. Ako vec postoji unos sa tim nazivom aplikacija vraca error code 409 sa odgovarajucom porukom.
+
+## Zadatak 2
+
+Za zadatak 2 dodana je nova GET metoda u screening_routes.py /movie-screening-counter/{movie_id} koja vraća ukupni broj prikazivanja nekog filma koje su se odrzala ili su planirane da se odrze.
+```
