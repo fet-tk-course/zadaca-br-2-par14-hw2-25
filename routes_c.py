@@ -6,13 +6,22 @@ from typing import List, Optional
 
 router = APIRouter()
 
+@router.get("users/active_count")
+def count_active_users(session: Session = Depends(get_session)):
+    count= session.exec(select(User).where(User.is_active==True)).count()
+    return {"Ukupno aktivih korisnika":count}
+
 @router.post("/users", response_model=User, status_code=201)
 def create_user(user: UserCreate, session: Session = Depends(get_session)):
+    existing_user=session.exec(select(User).where(User.email==user.email)).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Korisnik sa ovom email adresom vec postoji")
     db_user = User.model_validate(user)
     session.add(db_user)
     session.commit()
     session.refresh(db_user)
     return db_user
+
 
 @router.get("/users", response_model=List[User])
 def get_users(age: Optional[int] = None, session: Session = Depends(get_session)):
@@ -21,12 +30,14 @@ def get_users(age: Optional[int] = None, session: Session = Depends(get_session)
         statement = statement.where(User.age == age)
     return session.exec(statement).all()
 
+
 @router.get("/users/{id}", response_model=User)
 def get_user(id: int, session: Session = Depends(get_session)):
     user = session.get(User, id)
     if not user:
         raise HTTPException(status_code=404, detail="Korisnik nije pronadjen")
     return user
+
 
 @router.patch("/users/{id}", response_model=User)
 def update_user(id: int, user_data: UserUpdate, session: Session = Depends(get_session)):
@@ -52,6 +63,9 @@ def delete_user(id: int, session: Session = Depends(get_session)):
 
 @router.post("/reservations", response_model=Reservation, status_code=201)
 def create_reservation(res: ReservationCreate, session: Session = Depends(get_session)):
+    existing_reservation=session.exec(select(Reservation).where((Reservation.seat_id==res.seat_id)&(Reservation.screening_id==res.screeing_id))).first()
+    if existing_reservation:
+        raise HTTPException(status_code=409, detail="Sjediste je vec rezervisano za ovaj termin")
     db_res = Reservation.model_validate(res)
     session.add(db_res)
     session.commit()

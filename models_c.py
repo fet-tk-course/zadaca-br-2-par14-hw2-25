@@ -1,6 +1,9 @@
+from operator import ge
+
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime
+from pydantic import field_validator
 
 class User(SQLModel, table=True):
     id: Optional[int]=Field(default=None, primary_key=True)
@@ -17,6 +20,12 @@ class UserCreate(SQLModel):
     email:str
     age:int
     phone_number:str
+    @field_validator('first_name')
+    @classmethod
+    def ime_ne_smije_biti_prazno(cls, v):
+       if not v.strip():
+          raise ValueError('Ime ne smije biti prazan string')
+       return v.strip() @field_validator('kolicina')
 
 class UserUpdate(SQLModel):
     first_name:Optional[str]=None
@@ -38,6 +47,12 @@ class ReservationCreate(SQLModel):
     screening_id:int
     seat_id:int
     price:float
+@field_validator('price')
+@classmethod
+def cijena_mora_biti_pozitivna(cls, v):
+    if v <= 0:
+         raiseValueError('Cijena mora biti veca od nule') 
+    return v
 
 class ReservationUpdate(SQLModel):
     seat_id:Optional[int]=None

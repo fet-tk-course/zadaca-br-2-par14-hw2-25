@@ -89,3 +89,97 @@ curl -X POST "http://localhost:8000/resursi_a" \
 ## Napomene
 
 [Dodatne napomene specifične za vašu implementaciju]
+
+##  Zadaci sa provjere - Student C 
+
+Z1:
+
+Dodan strani ključ user_id u model Reservation, koji povezuje rezervaciju s korisnikom (User).
+Implementiran POST endpoint za kreiranje korisnika i rezervacija.
+
+Z2:
+
+Dodana validacija u modele (UserCreate, ReservationCreate):
+Ime korisnika ne smije biti prazan string.
+Cijena rezervacije mora biti pozitivna.
+U POST endpointima dodana provjera za jedinstvena polja (npr. email za korisnika, kombinacija seat_id i screening_id za rezervaciju) – vraća HTTP 409 ako već postoji.
+Dodan custom GET endpoint za broj aktivnih korisnika.
+
+1.POST/users/
+
+primjer zahtjeva:
+
+{
+  "first_name": "Amina",
+  "last_name": "Test",
+  "email": "amina@example.com",
+  "age": 22,
+  "phone_number": "061123456"
+}
+ 
+ odgovor:
+
+ {
+  "id": 1,
+  "first_name": "Amina",
+  "last_name": "Test",
+  "email": "amina@example.com",
+  "age": 22,
+  "phone_number": "061123456",
+  "is_active": true
+}
+
+Greska, ako emai vec postoji;
+
+{
+  "detail": "Korisnik sa ovim emailom već postoji"
+}
+
+Status: 409 Conflict
+
+2. POST /reservations/
+Zahtjev:
+
+{
+  "user_id": 1,
+  "screening_id": 2,
+  "seat_id": 5,
+  "price": 10.0
+}
+
+odgovor:
+
+{
+  "id": 1,
+  "user_id": 1,
+  "screening_id": 2,
+  "seat_id": 5,
+  "price": 10.0,
+  "confirmed": false
+}
+greska:
+
+{
+  "detail": "Rezervacija za ovo mjesto već postoji"
+}
+
+Status:409 Conflict 
+
+3. GET /users/active_count
+
+Odgovor:
+
+{
+  "ukupno_aktivnih": 3
+}
+
+first_name u UserCreate ne smije biti prazan string.
+Greška: "Ime ne smije biti prazan string" – HTTP 422 Unprocessable Entity
+price u ReservationCreate mora biti pozitivan broj.
+Greška: "Cijena mora biti pozitivna" – HTTP 422 Unprocessable Entity
+Ako se pokuša kreirati korisnik s već postojećim emailom ili rezervacija za isto mjesto i projekciju, vraća se HTTP 409 Conflict.
+
+
+
+
+
