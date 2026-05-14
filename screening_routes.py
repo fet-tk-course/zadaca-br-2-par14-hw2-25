@@ -35,6 +35,12 @@ def _screening_overlaps(
 			return True
 	return False
 
+
+@router.get("movie-screenings-counter/{movie_id}", response_model=int)
+def get_screenings_for_movie(movie_id: int, session: Session = Depends(get_session)):
+	statement = select(Screening).where(Screening.movie_id == movie_id)
+	return session.exec(statement).all().__len__()
+
 @router.get("", response_model=list[Screening])
 def get_screenings(
 	hall_id: Optional[int] = Query(default=None, description="Filter by hall id"),
