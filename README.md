@@ -222,14 +222,15 @@ Prilagodbe: Prilagođene poruke grešaka, usklađeni nazivi funkcija
 - **Prompt:** "Kako najbrže mapirati podatke iz Pydantic 'Create' modela u SQLModel 'Table' model bez ručnog dodjeljivanja svakog polja?"
 - **Kako je pomoglo:** Predložena je metoda `model_validate()`, koja automatski prebacuje podatke u bazu uz poštovanje validacije.
 - **Prilagodbe:** Iskoristila sam ovaj pristup u rutama za kreiranje korisnika i rezervacija, čime je kod postao kraći i pregledniji.
+```
 
 ## Napomene
 
 Aplikacija je testirana na Python 3.12.10 bez virtualnog okruženja.
 Za pokretanje koristiti: py -3.12 -m uvicorn main:app --
 
-
 # Provjera - Student Elnur Bjelić
+
 ## Zadatak 1a
 
 Za zadatak 1a dodana su dva validatora, jedan u klasi SeatTypeCreate i drugi u klasi ScreeningCreate.
@@ -242,4 +243,3 @@ Za zadatak 1b dodana je provjera duplikata za tabelu (modele) SeatType i HallTyp
 ## Zadatak 2
 
 Za zadatak 2 dodana je nova GET metoda u screening_routes.py /movie-screening-counter/{movie_id} koja vraća ukupni broj prikazivanja nekog filma koje su se odrzala ili su planirane da se odrze.
-```
